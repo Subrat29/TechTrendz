@@ -28,18 +28,18 @@ function Header() {
             active: !authStatus
         },
         {
-            name: 'AllPosts',
+            name: 'Your Posts',
             url: '/allposts',
             active: authStatus
         },
         {
-            name: 'AddPost',
+            name: 'Write',
             url: '/addpost',
             active: authStatus
         }
     ]
     return (
-        <header className='py-3 shadow bg-gray-500'>
+        <header className='py-3'>
             <Container>
                 <nav className='flex'>
                     <div className='mr-4'>
@@ -51,8 +51,8 @@ function Header() {
                         {navItems.map((item) => item.active ? (
                             <li key={item.name}>
                                 <button
+                                    className='inline-bock px-6 py-2 duration-200'
                                     onClick={() => navigate(item.url)}
-                                    className='inline-bock px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
                                 >{item.name}</button>
                             </li>
                         ) : (null))}

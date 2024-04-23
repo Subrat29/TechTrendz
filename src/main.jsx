@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import { AddPost, AllPost, EditPost, Home, Login, Post, Signup } from './pages/index'
 import { AuthLayout } from './components/index'
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 const router = createBrowserRouter(
@@ -39,7 +40,7 @@ const router = createBrowserRouter(
       } />
       <Route path='/post/:slug' element={
         // Todo: remove authlayout?
-          <Post />
+        <Post />
       } />
     </Route>
   )
@@ -47,6 +48,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <ChakraProvider>
+      <RouterProvider router={router} />
+    </ChakraProvider>
   </Provider>
 )

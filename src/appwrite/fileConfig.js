@@ -15,7 +15,7 @@ export class FileService {
     async uploadImage(file) {
         try {
             const response = await this.storage.createFile(conf.appwriteBucketId, ID.unique(), file)
-            console.log("appwrite/uploadImage/response: ", response);
+            // console.log("appwrite/uploadImage/response: ", response);
             return response
         } catch (error) {
             console.log("appwrite/fileConfig/FileService/uploadImage : ", error)
@@ -34,7 +34,23 @@ export class FileService {
 
     async getImagePreview(fileId) {
         try {
-            return this.storage.getFilePreview(conf.appwriteBucketId, fileId)
+            const response = this.storage.getFilePreview(
+                conf.appwriteBucketId,
+                fileId,
+                200,                // width, will be resized using this value.
+                200,                // height, ignored when 0
+                'center',           // crop center
+                '100',               // slight compression
+                1,                  // border width
+                '000000',           // border color
+                1,                 // border radius
+                1,                  // full opacity
+                0,                  // no rotation
+                '000000',           // background color
+                'webp'               // output jpg format
+            )
+            console.log("appwrite/getImagePreview/response: ", response);
+            return response
         } catch (error) {
             console.log("appwrite/fileConfig/FileService/getImagePreview : ", error)
             return false;
