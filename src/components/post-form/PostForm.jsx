@@ -42,10 +42,10 @@ function PostForm({ post }) {
         else {
             // create post
             console.log("Create Post");
-            console.log("postForm/NewPost/data.image[0]: ", data.image[0]);
+            // console.log("postForm/NewPost/data.image[0]: ", data.image[0]);
 
             const file = data.image[0] ? await fileservice.uploadImage(data.image[0]) : null
-            console.log("image: ", file);
+            // console.log("image: ", file);
 
             const fileId = file?.$id || 'N/A'
             data.image = fileId

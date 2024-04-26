@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Container, PostCard2 } from '../components/index'
 import configservice from '../appwrite/config'
+import { Query } from 'appwrite'
 
 function Home() {
     const [posts, setPosts] = useState([])
 
+
     useEffect(() => {
-        configservice.getPosts().then((posts) => {
+        configservice.getPosts([Query.equal("status", "active")]).then((posts) => {
             if (posts)
                 setPosts(posts.documents)
         })
@@ -19,7 +21,7 @@ function Home() {
                     <div className="flex flex-wrap">
                         <div className="p-2 w-full">
                             <h1 className="text-2xl font-bold hover:text-gray-500">
-                                Login to read posts
+                                Loading Posts...
                             </h1>
                         </div>
                     </div>
@@ -35,19 +37,6 @@ function Home() {
                 </div>
             ))}
         </div>
-
-        // <div className='w-full py-8'>
-        //     <Container>
-        //         <div className='flex flex-wrap'>
-        //             {posts.map((post) => (
-        //                 <div key={post.$id} className='p-2 w-1/3 h-1/5'>
-        //                     <PostCard2 post={post} />
-        //                 </div>
-        //             ))}
-        //         </div>
-        //     </Container>
-        // </div>
-
     )
 }
 

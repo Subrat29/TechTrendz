@@ -7,9 +7,26 @@ function PostCard2({ post }) {
     const { $id, title, image, userId, $updatedAt } = post;
     const [imageUrl, setImageUrl] = useState(null)
 
+    const props = [
+        200,                // width, will be resized using this value.
+        200,                // height, ignored when 0
+        'center',           // crop center
+        '100',               // slight compression
+        1,                  // border width
+        '000000',           // border color
+        1,                 // border radius
+        1,                  // full opacity
+        0,                  // no rotation
+        '000000',           // background color
+        'webp'               // output jpg format
+    ]
+
     useEffect(() => {
         const fetchImageUrl = async () => {
-            const url = await fileservice.getImagePreview(image)
+            const url = await fileservice.getImagePreview(
+                image,
+                props
+            )
             setImageUrl(url)
         }
         fetchImageUrl()
@@ -32,7 +49,7 @@ function PostCard2({ post }) {
                             </Text>
                         </CardBody>
                         <CardFooter>
-                                <Heading size='sm'>Read more →</Heading>
+                            <Heading size='sm'>Read more →</Heading>
                         </CardFooter>
                     </Stack>
                     {imageUrl && <Image

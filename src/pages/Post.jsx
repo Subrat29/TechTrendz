@@ -14,7 +14,6 @@ function Post() {
     const userData = useSelector((state) => state.auth.userData)
     const isAuthor = post && userData ? (post.userId === userData.$id) : false
 
-    
     useEffect(() => {
         if (slug) {
             configservice.getPost(slug).then((post) => {
@@ -33,7 +32,20 @@ function Post() {
     }, [slug, navigate])
 
     const fetchImageUrl = async (image) => {
-        const url = await fileservice.getImagePreview(image)
+        const props = [
+            600,                // width, will be resized using this value.
+            300,                // height, ignored when 0
+            'center',           // crop center
+            '100',               // slight compression
+            1,                  // border width
+            '000000',           // border color
+            1,                 // border radius
+            1,                  // full opacity
+            0,                  // no rotation
+            '000000',           // background color
+            'webp'               // output jpg format
+        ]
+        const url = await fileservice.getImagePreview(image, props)
         setImageUrl(url)
     }
 
@@ -51,7 +63,7 @@ function Post() {
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
+                <div className="flex justify-center mb-4 relative p-2">
                     {imageUrl && (
                         <img
                             src={imageUrl}
@@ -78,10 +90,10 @@ function Post() {
                         </div>
                     )}
                 </div>
-                <div className="w-full mb-6">
+                <div className="flex justify-center w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
-                <div className="browser-css">
+                <div className="flex justify-center browser-css">
                     {parse(post.content)}
                 </div>
             </Container>

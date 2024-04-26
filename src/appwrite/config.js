@@ -49,7 +49,7 @@ export class ConfigService {
         }
     }
 
-    async getPosts(queries = [Query.equal("status", "active")]) {
+    async getPosts(queries = []) {
         try {
             const response = await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
