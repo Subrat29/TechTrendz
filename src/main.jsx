@@ -39,7 +39,6 @@ const router = createBrowserRouter(
         </AuthLayout>
       } />
       <Route path='/post/:slug' element={
-        // Todo: remove authlayout?
         <Post />
       } />
     </Route>
