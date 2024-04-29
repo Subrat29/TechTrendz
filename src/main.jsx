@@ -5,7 +5,7 @@ import './index.css'
 import store from './store/store'
 import { Provider } from 'react-redux'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-import { AddPost, AllPost, EditPost, Home, Login, Post, Signup } from './pages/index'
+import { AddPost, AllUserPosts, EditPost, Home, Login, Post, Signup } from './pages/index'
 import { AuthLayout } from './components/index'
 import { ChakraProvider } from '@chakra-ui/react'
 
@@ -23,9 +23,9 @@ const router = createBrowserRouter(
           <Signup />
         </AuthLayout>
       } />
-      <Route path='/allposts' element={
+      <Route path='/alluserposts' element={
         <AuthLayout authentication>
-          <AllPost />
+          <AllUserPosts />
         </AuthLayout>
       } />
       <Route path='/addpost' element={

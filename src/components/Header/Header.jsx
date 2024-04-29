@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { Container, Logo, LogoutBtn } from '../index'
@@ -6,10 +6,16 @@ import { Container, Logo, LogoutBtn } from '../index'
 function Header() {
     const authStatus = useSelector((state) => state.auth.status)
     const authUserData = useSelector((state) => state.auth.userData)
-    const userName = authUserData?.name || 'N/A'
+    const [user, setUser] = useState('N/A')
     const navigate = useNavigate()
+    
     console.log("Header/authstatus: ", authStatus)
-    // console.log("Header/authUserData: ", authUserData)
+
+    useEffect(() => {
+        if (authUserData && authUserData?.name) {
+            setUser(authUserData?.name)
+        }
+    }, [authUserData, user])
 
     const navItems = [
         {
@@ -29,7 +35,7 @@ function Header() {
         },
         {
             name: 'Your Posts',
-            url: '/allposts',
+            url: '/alluserposts',
             active: authStatus
         },
         {
@@ -63,7 +69,7 @@ function Header() {
                         )}
                     </ul>
                     <div className="bg-blue-500 rounded p-1 shadow-md">
-                        <span className="text-white text-lg font-semibold">User: {userName}</span>
+                        <span className="text-white text-lg font-semibold">User: {user}</span>
                     </div>
                 </nav>
             </Container>

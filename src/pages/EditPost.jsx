@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { Container, PostForm } from '../components/index'
-import configservice from '../appwrite/config'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function EditPost() {
     const [post, setPost] = useState(null)
     const { slug } = useParams()
     const navigate = useNavigate()
 
-    console.log('EditPost/slug: ', slug);
-    console.log('EditPost/post: ', post);
-
+    const allPosts = useSelector((state) => state?.posts?.posts)
     useEffect(() => {
-        if (slug) {
-            configservice.getPost(slug).then((post) => {
-                if (post) {
-                    setPost(post)
-                }
-            })
+        if (allPosts && slug) {
+            const filteredPost = allPosts.find((post) => post?.$id === slug);
+            if (filteredPost) {
+                setPost(filteredPost);
+            }
+        } else {
+            navigate('/');
         }
-        else {
-            navigate('/')
-        }
-    }, [slug, navigate])
+    }, [allPosts, slug, navigate]);
 
     return post ? (
         <div className='py-8'>

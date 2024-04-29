@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Container, PostCard2 } from '../components/index'
-import configservice from '../appwrite/config'
 import { useSelector } from 'react-redux'
-import { Query } from 'appwrite'
 
-function AllPost() {
-    const { $id } = useSelector((state) => state.auth.userData)
+function AllUserPosts() {
+    const { $id } = useSelector((state) => state?.auth?.userData)
+    const allPosts = useSelector((state) => state?.posts?.posts)
     const [posts, setPosts] = useState([])
 
     useEffect(() => {
-        configservice.getPosts([Query.equal("userId", `${$id}`)]).then((posts) => {
-            if (posts) {
-                setPosts(posts.documents)
-            }
-        })
-    }, [])
+        if (allPosts) {
+            const userPosts = allPosts?.filter((post) => (post?.userId === $id))
+            setPosts(userPosts)
+        }
+    }, [allPosts, $id]);
 
-    if (posts.length === 0) {
+    if (posts?.length === 0) {
         return (
             <div className="w-full py-8 mt-4 text-center">
                 <Container>
@@ -34,8 +32,8 @@ function AllPost() {
 
     return (
         <div className='w-full py-8'>
-            {posts.map((post) => (
-                <div key={post.$id} className='p-2'>
+            {posts?.map((post) => (
+                <div key={post?.$id} className='p-2'>
                     <PostCard2 post={post} />
                 </div>
             ))}
@@ -43,4 +41,4 @@ function AllPost() {
     )
 }
 
-export default AllPost
+export default AllUserPosts

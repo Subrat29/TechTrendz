@@ -12,14 +12,10 @@ const postSlice = createSlice({
     reducers: {
         addPost: (state, action) => {
             state.loading = false
-            // state.posts = action.payload;
             state.posts.push(action.payload);
-
-            // console.log("postslice/addpost/action.payload: ",action.payload)
-            // console.log("postslice/addpost/posts: ",state.posts)
         },
         updatePost: (state, action) => {
-            const updatedPost = action.payload.updatedPost
+            const updatedPost = action.payload
             const index = state.posts.findIndex(post => post.$id === updatedPost.$id);
             if (index !== -1) {
                 state.posts[index] = updatedPost;

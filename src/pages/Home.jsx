@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { Container, PostCard2 } from '../components/index'
 import { useSelector } from 'react-redux'
 
 function Home() {
     const allPosts = useSelector((state) => state?.posts?.posts)
+    const [posts, setPosts] = useState([])
 
-    if (allPosts.length === 0) {
+    useMemo(() => {
+        if (allPosts) {
+            setPosts(allPosts)
+        }
+    }, [allPosts]);
+
+    if (posts?.length === 0) {
         return (
             <div className="w-full py-8 mt-4 text-center">
                 <Container>
@@ -22,8 +29,8 @@ function Home() {
     }
     return (
         <div className='w-full py-8'>
-            {allPosts.map((post) => (
-                <div key={post.$id} className='p-2'>
+            {posts?.map((post) => (
+                <div key={post?.$id} className='p-2'>
                     <PostCard2 post={post} />
                 </div>
             ))}

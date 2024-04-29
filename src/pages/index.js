@@ -1,5 +1,5 @@
 import AddPost from './AddPost'
-import AllPost from './AllPost'
+import AllUserPosts from './AllUserPosts'
 import EditPost from './EditPost'
 import Home from './Home'
 import Login from './Login'
@@ -8,7 +8,7 @@ import Signup from './Signup'
 
 export {
     AddPost,
-    AllPost,
+    AllUserPosts,
     EditPost,
     Home,
     Login,

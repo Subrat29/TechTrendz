@@ -4,7 +4,8 @@ import { Button, Input, RTE, Select } from "..";
 import configservice from '../../appwrite/config'
 import fileservice from '../../appwrite/fileConfig'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addPost, updatePost } from '../../feature/postSlice';
 
 
 function PostForm({ post }) {
@@ -21,6 +22,7 @@ function PostForm({ post }) {
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
     const [imageUrl, setImageUrl] = useState(null)
+    const dispatch = useDispatch()
 
     const submit = async (data) => {
         // update post
@@ -36,17 +38,14 @@ function PostForm({ post }) {
                     image: file ? file.$id : undefined
                 })
             if (dbPost) {
+                dispatch(updatePost(dbPost))
                 navigate(`/post/${dbPost.$id}`)
             }
         }
         else {
             // create post
             console.log("Create Post");
-            // console.log("postForm/NewPost/data.image[0]: ", data.image[0]);
-
             const file = data.image[0] ? await fileservice.uploadImage(data.image[0]) : null
-            // console.log("image: ", file);
-
             const fileId = file?.$id || 'N/A'
             data.image = fileId
             const dbPost = await configservice.createPost({
@@ -54,6 +53,7 @@ function PostForm({ post }) {
                 userId: userData.$id ? userData.$id : 'N/A'
             })
             if (dbPost) {
+                dispatch(addPost(dbPost))
                 navigate(`/post/${dbPost.$id}`)
             }
         }

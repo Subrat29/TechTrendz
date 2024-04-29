@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import authservice from './appwrite/auth'
 import configservice from './appwrite/config'
 import { Query } from 'appwrite'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { login, logout } from './feature/authSlice'
 import { addPost } from './feature/postSlice'
 import { Outlet } from 'react-router-dom'
@@ -30,7 +30,6 @@ function App() {
   useEffect(() => {
     configservice.getPosts([Query.equal("status", "active")]).then((posts) => {
       if (posts) {
-        console.log("post coming from getPost: ", posts.documents);
         var allPosts = posts.documents
         allPosts.map((post) =>
           dispatch(addPost(post))
