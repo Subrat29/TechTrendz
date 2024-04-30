@@ -3,16 +3,25 @@ import { Container, PostCard2 } from '../components/index'
 import { useSelector } from 'react-redux'
 
 function AllUserPosts() {
-    const { $id } = useSelector((state) => state?.auth?.userData)
-    const allPosts = useSelector((state) => state?.posts?.posts)
+    const userData = useSelector((state) => state.auth.userData) || null
+    const allPosts = useSelector((state) => state.posts.posts) || null
     const [posts, setPosts] = useState([])
+    const [id, setId] = useState(null)
+    
+    console.log("alluserposts/userdata :: ", userData);
+    useEffect(() => {
+        if (userData) {
+            setId(userData.$id)
+        }
+    }, [userData, id])
+
 
     useEffect(() => {
-        if (allPosts) {
-            const userPosts = allPosts?.filter((post) => (post?.userId === $id))
+        if (id && allPosts) {
+            const userPosts = allPosts?.filter((post) => (post?.userId === id))
             setPosts(userPosts)
         }
-    }, [allPosts, $id]);
+    }, [allPosts, id, userData]);
 
     if (posts?.length === 0) {
         return (
@@ -33,7 +42,7 @@ function AllUserPosts() {
     return (
         <div className='w-full py-8'>
             {posts?.map((post) => (
-                <div key={post?.$id} className='p-2'>
+                <div key={post.$id} className='p-2'>
                     <PostCard2 post={post} />
                 </div>
             ))}

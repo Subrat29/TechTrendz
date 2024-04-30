@@ -22,8 +22,9 @@ const postSlice = createSlice({
             }
         },
         deletePost: (state, action) => {
-            const postId = action.payload.id;
-            state.posts = state.posts.filter(post => post.id !== postId);
+            const postId = action.payload;
+            const updatedPost = state.posts.filter(post => post.$id !== postId);
+            state.posts = updatedPost
         },
         setError: (state, action) => {
             state.error = action.payload;

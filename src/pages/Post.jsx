@@ -1,10 +1,11 @@
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button, Container } from '../components/index'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import configservice from '../appwrite/config'
 import fileservice from '../appwrite/fileConfig'
 import parse from "html-react-parser";
+import { deletePost } from '../feature/postSlice'
 
 function Post() {
     const [post, setPost] = useState(null)
@@ -13,23 +14,39 @@ function Post() {
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
     const isAuthor = post && userData ? (post.userId === userData.$id) : false
+    const dispatch = useDispatch()
 
+    console.log("SLUG: ", slug);
+
+    const allPosts = useSelector((state) => state.posts.posts)
     useEffect(() => {
-        if (slug) {
-            configservice.getPost(slug).then((post) => {
-                if (post) {
-                    setPost(post)
-                    fetchImageUrl(post.image)
-                }
-                else {
-                    navigate('/')
-                }
-            })
+        if (allPosts && slug) {
+            const currentPost = allPosts.find((post) => post.$id === slug);
+            if (currentPost) {
+                setPost(currentPost);
+                fetchImageUrl(currentPost.image)
+            }
+        } else {
+            navigate('/');
         }
-        else {
-            navigate('/')
-        }
-    }, [slug, navigate])
+    }, [allPosts, slug, navigate]);
+
+    // useEffect(() => {
+    //     if (slug) {
+    //         configservice.getPost(slug).then((post) => {
+    //             if (post) {
+    //                 setPost(post)
+    //                 fetchImageUrl(post.image)
+    //             }
+    //             else {
+    //                 navigate('/')
+    //             }
+    //         })
+    //     }
+    //     else {
+    //         navigate('/')
+    //     }
+    // }, [slug, navigate])
 
     const fetchImageUrl = async (image) => {
         const props = [
@@ -51,9 +68,10 @@ function Post() {
 
     const deletePost = () => {
         if (post) {
-            configservice.deletePost(slug).then((status) => {  //replace: slug to post.$id
+            configservice.deletePost(slug).then((status) => {
                 if (status) {
                     fileservice.deleteImage(post.image)
+                    dispatch(deletePost(slug))
                     navigate('/')
                 }
             })
