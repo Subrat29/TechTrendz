@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import configservice from '../appwrite/config'
 import fileservice from '../appwrite/fileConfig'
 import parse from "html-react-parser";
-import { deletePost } from '../feature/postSlice'
+import { deletePost as deletePostFromStore } from '../feature/postSlice'
 
 function Post() {
     const [post, setPost] = useState(null)
@@ -15,8 +15,6 @@ function Post() {
     const userData = useSelector((state) => state.auth.userData)
     const isAuthor = post && userData ? (post.userId === userData.$id) : false
     const dispatch = useDispatch()
-
-    console.log("SLUG: ", slug);
 
     const allPosts = useSelector((state) => state.posts.posts)
     useEffect(() => {
@@ -30,23 +28,6 @@ function Post() {
             navigate('/');
         }
     }, [allPosts, slug, navigate]);
-
-    // useEffect(() => {
-    //     if (slug) {
-    //         configservice.getPost(slug).then((post) => {
-    //             if (post) {
-    //                 setPost(post)
-    //                 fetchImageUrl(post.image)
-    //             }
-    //             else {
-    //                 navigate('/')
-    //             }
-    //         })
-    //     }
-    //     else {
-    //         navigate('/')
-    //     }
-    // }, [slug, navigate])
 
     const fetchImageUrl = async (image) => {
         const props = [
@@ -71,7 +52,7 @@ function Post() {
             configservice.deletePost(slug).then((status) => {
                 if (status) {
                     fileservice.deleteImage(post.image)
-                    dispatch(deletePost(slug))
+                    dispatch(deletePostFromStore(slug))
                     navigate('/')
                 }
             })

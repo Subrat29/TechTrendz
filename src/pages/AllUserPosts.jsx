@@ -8,7 +8,6 @@ function AllUserPosts() {
     const [posts, setPosts] = useState([])
     const [id, setId] = useState(null)
     
-    console.log("alluserposts/userdata :: ", userData);
     useEffect(() => {
         if (userData) {
             setId(userData.$id)
