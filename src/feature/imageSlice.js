@@ -6,13 +6,13 @@ const initialState = {
             imageId: 'n/a',
             imageUrl: 'n/a'
         }
-    ],
+    ]
 }
 
 const imageSlice = createSlice({
     name: 'images',
     initialState,
-    reducer: {
+    reducers: {
         addImage: (state, action) => {
             const newImage = { imageId: action.payload.imageId, imageUrl: action.payload.imageUrl }
             state.images.push(newImage)

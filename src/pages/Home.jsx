@@ -6,6 +6,9 @@ function Home() {
     const allPosts = useSelector((state) => state?.posts?.posts)
     const [posts, setPosts] = useState([])
 
+    const allImages = useSelector((state)=>state.images.images)
+    console.log("All images: ", allImages);
+
     useMemo(() => {
         if (allPosts) {
             setPosts(allPosts)
