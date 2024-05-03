@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import authservice from './appwrite/auth'
 import configservice from './appwrite/config'
 import { Query } from 'appwrite'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { login, logout } from './feature/authSlice'
 import { addPost } from './feature/postSlice'
 import { Outlet } from 'react-router-dom'
 import { Header, Footer } from './components/index'
+import { addImage } from './feature/imageSlice'
+import fileservice from './appwrite/fileConfig'
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -20,25 +22,64 @@ function App() {
         } else {
           dispatch(logout())
         }
-      }).catch((userData) => {
-        console.log("App.jsx/getCurrentUser :: error :: ", userData);
+      }).catch((error) => {
+        console.log("App.jsx/getCurrentUser :: error :: ", error);
       }).finally(() => {
         setLoading(false)
       })
   }, [])
 
+  // useEffect(() => {
+  //   configservice.getPosts([Query.equal("status", "active")]).then((posts) => {
+  //     if (posts) {
+  //       var allPosts = posts.documents
+  //       allPosts.map((post) =>
+  //         dispatch(addPost(post))
+  //       )
+  //     }
+  //   }).catch((posts) => {
+  //     console.log("App.jsx/getPosts :: error :: ", posts);
+  //   })
+  // }, [])
+
   useEffect(() => {
-    configservice.getPosts([Query.equal("status", "active")]).then((posts) => {
-      if (posts) {
-        var allPosts = posts.documents
-        allPosts.map((post) =>
-          dispatch(addPost(post))
-        )
+    const fetchPosts = async () => {
+      try {
+        const posts = await configservice.getPosts([Query.equal("status", "active")])
+        if (posts && posts.documents) {
+          const allPosts = posts.documents
+          for (const post of allPosts) {
+            dispatch(addPost(post))
+            if (post.image) {
+              const imageUrl = await fetchImageUrl(post.image)
+              dispatch(addImage({ imageId: post.image, imageUrl: imageUrl.toString() }));
+            }
+          }
+        }
+      } catch (error) {
+        console.log("App.jsx/getPosts :: error :: ", error);
       }
-    }).catch((posts) => {
-      console.log("App.jsx/getPosts :: error :: ", posts);
-    })
+    }
+    fetchPosts()
   }, [])
+
+  const fetchImageUrl = async (image) => {
+    const props = [
+      600,
+      300,
+      'center',
+      '100',
+      1,
+      '000000',
+      1,
+      1,
+      0,
+      '000000',
+      'webp'
+    ];
+    const url = await fileservice.getImagePreview(image, props)
+    return url
+  };
 
   return !loading ? (
     <div className='min-h-screen flex flex-wrap content-between' >

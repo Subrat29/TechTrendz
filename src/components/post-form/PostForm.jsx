@@ -6,6 +6,8 @@ import fileservice from '../../appwrite/fileConfig'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addPost, updatePost } from '../../feature/postSlice';
+import { addImage, deleteImage } from '../../feature/imageSlice';
+
 
 
 function PostForm({ post }) {
@@ -15,7 +17,8 @@ function PostForm({ post }) {
                 title: post?.title || "No Title",
                 slug: post?.$id || "",
                 content: post?.content || "No content",
-                status: post?.status || "active"
+                status: post?.status || "active",
+                image: post?.image 
             }
         }
     )
@@ -28,14 +31,19 @@ function PostForm({ post }) {
         // update post
         if (post) {
             console.log("Update Post");
-            const file = data.image[0] ? await fileservice.uploadImage(data.image[0]) : null
-            if (file) {
-                fileservice.deleteImage(post.image)
+            const newImage = data?.image[0] ? await fileservice.uploadImage(data?.image[0]) : null
+            if (newImage) {
+                const newImageUrl = await fetchImageUrl(newImage.$id)
+                if (post.image) {
+                    await fileservice.deleteImage(post.image)
+                    dispatch(deleteImage(post.image))
+                }
+                dispatch(addImage({ imageId: newImage.$id, imageUrl: newImageUrl.toString() }))
             }
             const dbPost = await configservice.updatePost(post.$id,
                 {
                     ...data,
-                    image: file ? file.$id : undefined
+                    image: newImage ? newImage.$id : null
                 })
             if (dbPost) {
                 dispatch(updatePost(dbPost))
@@ -45,12 +53,16 @@ function PostForm({ post }) {
         else {
             // create post
             console.log("Create Post");
-            const file = data.image[0] ? await fileservice.uploadImage(data.image[0]) : null
-            const fileId = file?.$id || 'N/A'
-            data.image = fileId
+            const newImage = data?.image[0] ? await fileservice.uploadImage(data?.image[0]) : null
+            const newImageId = newImage?.$id || null
+            if (newImageId) {
+                const newImageUrl = await fetchImageUrl(newImageId)
+                dispatch(addImage({ imageId: newImageId, imageUrl: newImageUrl.toString() }))
+            }
+            data.image = newImageId
             const dbPost = await configservice.createPost({
                 ...data,
-                userId: userData.$id ? userData.$id : 'N/A'
+                userId: userData.$id ? userData.$id : null
             })
             if (dbPost) {
                 dispatch(addPost(dbPost))
@@ -79,12 +91,27 @@ function PostForm({ post }) {
         }
     }, [watch, slugTransform, setValue])
 
-    const getImageUrl = async () => {
-        const url = await fileservice.getImagePreview(post.image)
+    const fetchImageUrl = async (image) => {
+        const props = [
+            600,
+            300,
+            'center',
+            '100',
+            1,
+            '000000',
+            1,
+            1,
+            0,
+            '000000',
+            'webp'
+        ];
+        const url = await fileservice.getImagePreview(image, props);
         setImageUrl(url)
-    }
-    if (post) {
-        getImageUrl()
+        return url;
+    };
+
+    if (post.image) {
+        fetchImageUrl(post.image)
     }
 
     return (
@@ -118,7 +145,7 @@ function PostForm({ post }) {
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={imageUrl}
+                            src={imageUrl || 'n/a'}
                             alt={post.title}
                             className="rounded-lg"
                         />

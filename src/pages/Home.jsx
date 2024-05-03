@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux'
 function Home() {
     const allPosts = useSelector((state) => state?.posts?.posts)
     const [posts, setPosts] = useState([])
-
     const allImages = useSelector((state)=>state.images.images)
+    console.log("allPosts: ", allPosts);
     console.log("All images: ", allImages);
 
     useMemo(() => {
