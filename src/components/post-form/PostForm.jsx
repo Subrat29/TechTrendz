@@ -8,17 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addPost, updatePost } from '../../feature/postSlice';
 import { addImage, deleteImage } from '../../feature/imageSlice';
 
-
-
 function PostForm({ post }) {
     const { register, handleSubmit, watch, setValue, control, getValues } = useForm(
         {
             defaultValues: {
-                title: post?.title || "No Title",
+                title: post?.title || "",
                 slug: post?.$id || "",
                 content: post?.content || "No content",
                 status: post?.status || "active",
-                image: post?.image 
             }
         }
     )
@@ -31,19 +28,21 @@ function PostForm({ post }) {
         // update post
         if (post) {
             console.log("Update Post");
-            const newImage = data?.image[0] ? await fileservice.uploadImage(data?.image[0]) : null
+            const newImage = data.image[0] ? await fileservice.uploadImage(data.image[0]) : null
             if (newImage) {
                 const newImageUrl = await fetchImageUrl(newImage.$id)
                 if (post.image) {
-                    await fileservice.deleteImage(post.image)
+                    fileservice.deleteImage(post.image)
                     dispatch(deleteImage(post.image))
                 }
                 dispatch(addImage({ imageId: newImage.$id, imageUrl: newImageUrl.toString() }))
             }
+
+            const finalImage = newImage ? newImage.$id : post.image
             const dbPost = await configservice.updatePost(post.$id,
                 {
                     ...data,
-                    image: newImage ? newImage.$id : null
+                    image: finalImage
                 })
             if (dbPost) {
                 dispatch(updatePost(dbPost))
@@ -53,7 +52,7 @@ function PostForm({ post }) {
         else {
             // create post
             console.log("Create Post");
-            const newImage = data?.image[0] ? await fileservice.uploadImage(data?.image[0]) : null
+            const newImage = data.image[0] ? await fileservice.uploadImage(data.image[0]) : null
             const newImageId = newImage?.$id || null
             if (newImageId) {
                 const newImageUrl = await fetchImageUrl(newImageId)
@@ -110,7 +109,7 @@ function PostForm({ post }) {
         return url;
     };
 
-    if (post.image) {
+    if (post && post.image) {
         fetchImageUrl(post.image)
     }
 
