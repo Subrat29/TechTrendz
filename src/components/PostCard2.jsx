@@ -2,10 +2,19 @@ import React, { useEffect, useState } from 'react'
 import fileservice from "../appwrite/fileConfig"
 import { Link } from 'react-router-dom'
 import { Card, CardBody, CardFooter, Image, Stack, Heading, Text, Button, Center } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 
 function PostCard2({ post }) {
     const { $id, title, image, userId, $updatedAt } = post;
     const [imageUrl, setImageUrl] = useState(null)
+
+    // const allImages = useSelector((state)=>state.images.images)
+    // useEffect(()=>{
+    //     const currentImage = allImages.find((image) => post.image === image.imageId);
+    //     if(currentImage){
+    //         setImageUrl(currentImage.imageUrl)
+    //     }
+    // })
 
     const props = [
         200,                // width, will be resized using this value.

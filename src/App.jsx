@@ -27,7 +27,7 @@ function App() {
       }).finally(() => {
         setLoading(false)
       })
-  }, [])
+  }, []) 
 
   // useEffect(() => {
   //   configservice.getPosts([Query.equal("status", "active")]).then((posts) => {

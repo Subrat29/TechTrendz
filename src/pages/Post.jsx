@@ -6,6 +6,7 @@ import configservice from '../appwrite/config'
 import fileservice from '../appwrite/fileConfig'
 import parse from "html-react-parser";
 import { deletePost as deletePostFromStore } from '../feature/postSlice'
+import { deleteImage } from '../feature/imageSlice'
 
 function Post() {
     const [post, setPost] = useState(null)
@@ -15,47 +16,54 @@ function Post() {
     const userData = useSelector((state) => state.auth.userData)
     const isAuthor = post && userData ? (post.userId === userData.$id) : false
     const dispatch = useDispatch()
-
+    const allImages = useSelector((state)=>state.images.images)
     const allPosts = useSelector((state) => state.posts.posts)
+    
     useEffect(() => {
         if (allPosts && slug) {
             const currentPost = allPosts.find((post) => post.$id === slug);
             if (currentPost) {
                 setPost(currentPost);
-                fetchImageUrl(currentPost.image)
+                const currentImage = allImages.find((image) => currentPost.image === image.imageId);
+                if(currentImage){
+                    setImageUrl(currentImage.imageUrl)
+                }
+                // fetchImageUrl(currentPost.image)
             }
         } else {
             navigate('/');
         }
     }, [allPosts, slug, navigate]);
 
-    const fetchImageUrl = async (image) => {
-        const props = [
-            600,                // width, will be resized using this value.
-            300,                // height, ignored when 0
-            'center',           // crop center
-            '100',               // slight compression
-            1,                  // border width
-            '000000',           // border color
-            1,                 // border radius
-            1,                  // full opacity
-            0,                  // no rotation
-            '000000',           // background color
-            'webp'               // output jpg format
-        ]
-        const url = await fileservice.getImagePreview(image, props)
-        setImageUrl(url)
-    }
+    // const fetchImageUrl = async (image) => {
+    //     const props = [
+    //         600,                // width, will be resized using this value.
+    //         300,                // height, ignored when 0
+    //         'center',           // crop center
+    //         '100',               // slight compression
+    //         1,                  // border width
+    //         '000000',           // border color
+    //         1,                 // border radius
+    //         1,                  // full opacity
+    //         0,                  // no rotation
+    //         '000000',           // background color
+    //         'webp'               // output jpg format
+    //     ]
+    //     const url = await fileservice.getImagePreview(image, props)
+    //     setImageUrl(url)
+    // }
 
-    const deletePost = () => {
+    const deletePost = async () => {
         if (post) {
-            configservice.deletePost(slug).then((status) => {
-                if (status) {
+            const status = await configservice.deletePost(slug)
+            if (status) {
+                if (post.image) {
                     fileservice.deleteImage(post.image)
-                    dispatch(deletePostFromStore(slug))
-                    navigate('/')
+                    dispatch(deleteImage(post.image))
                 }
-            })
+                dispatch(deletePostFromStore(slug))
+                navigate('/')
+            }
         }
     }
 

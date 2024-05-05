@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     images: [
-        {
-            imageId: 'n/a',
-            imageUrl: 'n/a'
-        }
+        // {
+        //     imageId: 'n/a',
+        //     imageUrl: 'n/a'
+        // }
     ]
 }
 
