@@ -4,18 +4,21 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Container, Logo, LogoutBtn } from '../index'
 
 function Header() {
-    const authStatus = useSelector((state) => state.auth.status)
-    const authUserData = useSelector((state) => state.auth.userData)
-    const [user, setUser] = useState('N/A')
+    const authStatus = useSelector((state) => state.auth.status) || false
+    const authUserData = useSelector((state) => state.auth.userData) || {}
+    const [user, setUser] = useState('Guest')
     const navigate = useNavigate()
     
     console.log("Header/authstatus: ", authStatus)
 
     useEffect(() => {
-        if (authUserData && authUserData?.name) {
-            setUser(authUserData?.name)
+        if (authStatus && authUserData?.name) {
+            setUser(authUserData.name)
         }
-    }, [authUserData, user])
+        else {
+            setUser('Guest')
+        }
+    }, [authUserData, authStatus])
 
     const navItems = [
         {

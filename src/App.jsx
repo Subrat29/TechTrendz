@@ -2,51 +2,50 @@ import React, { useEffect, useState } from 'react'
 import authservice from './appwrite/auth'
 import configservice from './appwrite/config'
 import { Query } from 'appwrite'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { login, logout } from './feature/authSlice'
 import { addPost } from './feature/postSlice'
 import { Outlet } from 'react-router-dom'
 import { Header, Footer } from './components/index'
 import { addImage } from './feature/imageSlice'
 import fileservice from './appwrite/fileConfig'
+// import 'prismjs/themes/prism.css';
+
 
 function App() {
   const [loading, setLoading] = useState(true)
+  const [postsLoading, setPostsLoading] = useState(true)
   const dispatch = useDispatch()
+  const allPosts = useSelector((state) => state?.posts?.posts) || []
 
   useEffect(() => {
-    authservice.getCurrentUser()
-      .then((userData) => {
+    const fetchCurrentUser = async () => {
+      try {
+        const userData = await authservice.getCurrentUser();
         if (userData) {
-          dispatch(login({ userData }))
+          dispatch(login({ userData }));
         } else {
-          dispatch(logout())
+          dispatch(logout());
         }
-      }).catch((error) => {
+      } catch (error) {
         console.log("App.jsx/getCurrentUser :: error :: ", error);
-      }).finally(() => {
-        setLoading(false)
-      })
-  }, []) 
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   configservice.getPosts([Query.equal("status", "active")]).then((posts) => {
-  //     if (posts) {
-  //       var allPosts = posts.documents
-  //       allPosts.map((post) =>
-  //         dispatch(addPost(post))
-  //       )
-  //     }
-  //   }).catch((posts) => {
-  //     console.log("App.jsx/getPosts :: error :: ", posts);
-  //   })
-  // }, [])
+    fetchCurrentUser();
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchPosts = async () => {
+      if (allPosts.length > 0) {
+        setPostsLoading(false);
+        return;
+      }
       try {
         const posts = await configservice.getPosts([Query.equal("status", "active")])
-        if (posts && posts.documents) {
+        if (posts?.documents) {
           const allPosts = posts.documents
           for (const post of allPosts) {
             dispatch(addPost(post))
@@ -58,10 +57,13 @@ function App() {
         }
       } catch (error) {
         console.log("App.jsx/getPosts :: error :: ", error);
+      } finally {
+        setPostsLoading(false);
       }
     }
+
     fetchPosts()
-  }, [])
+  }, [dispatch, allPosts.length])
 
   const fetchImageUrl = async (image) => {
     const props = [
@@ -86,7 +88,11 @@ function App() {
       <div className='w-full block'>
         <Header />
         <main>
-          <Outlet />
+          {postsLoading ? (
+            <div className='text-5xl flex items-center justify-center w-full'>Loading posts...</div>
+          ) : (
+            <Outlet />
+          )}
         </main>
         <Footer />
       </div>
@@ -94,7 +100,7 @@ function App() {
   ) : (
     <div className='min-h-screen flex flex-wrap content-between'>
       <div className='w-full block'>
-        <h1 className='text-5xl flex items-center justify-center w-full'>Loading...</h1>
+        <h2 className='text-5xl flex items-center justify-center w-full'>Loading...</h2>
       </div>
     </div>
   )

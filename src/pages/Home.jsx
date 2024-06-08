@@ -30,6 +30,7 @@ function Home() {
             </div>
         )
     }
+    
     return (
         <div className='w-full py-8'>
             {posts?.map((post) => (

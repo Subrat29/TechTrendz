@@ -7,6 +7,9 @@ import fileservice from '../appwrite/fileConfig'
 import parse from "html-react-parser";
 import { deletePost as deletePostFromStore } from '../feature/postSlice'
 import { deleteImage } from '../feature/imageSlice'
+// import 'prismjs/themes/prism-okaidia.css';
+
+
 
 function Post() {
     const [post, setPost] = useState(null)
@@ -16,16 +19,17 @@ function Post() {
     const userData = useSelector((state) => state.auth.userData)
     const isAuthor = post && userData ? (post.userId === userData.$id) : false
     const dispatch = useDispatch()
-    const allImages = useSelector((state)=>state.images.images)
+    const allImages = useSelector((state) => state.images.images)
     const allPosts = useSelector((state) => state.posts.posts)
-    
+    const isLightTheme = true;
+
     useEffect(() => {
         if (allPosts && slug) {
             const currentPost = allPosts.find((post) => post.$id === slug);
             if (currentPost) {
                 setPost(currentPost);
                 const currentImage = allImages.find((image) => currentPost.image === image.imageId);
-                if(currentImage){
+                if (currentImage) {
                     setImageUrl(currentImage.imageUrl)
                 }
                 // fetchImageUrl(currentPost.image)
@@ -34,6 +38,14 @@ function Post() {
             navigate('/');
         }
     }, [allPosts, slug, navigate]);
+
+    // useEffect(() => {
+    //     if (isLightTheme) {
+    //         Prism.highlightAll();
+    //     } else {
+    //         Prism.highlightAll({ theme: 'prism-okaidia' });
+    //     }
+    // }, [post, isLightTheme]);
 
     // const fetchImageUrl = async (image) => {
     //     const props = [
@@ -70,14 +82,9 @@ function Post() {
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="flex justify-center mb-4 relative p-2">
-                    {imageUrl && (
-                        <img
-                            src={imageUrl}
-                            alt={post.title}
-                            className="rounded-xl"
-                        />
-                    )}
+                {/* <div className="flex justify-center w-full mb-6"> */}
+                <div className="flex justify-center mb-6 relative p-2">
+                    <h1 className="text-2xl font-bold">{post.title}</h1>
 
                     {isAuthor && (
                         <div className="absolute right-6 top-6">
@@ -97,11 +104,21 @@ function Post() {
                         </div>
                     )}
                 </div>
-                <div className="flex justify-center w-full mb-6">
-                    <h1 className="text-2xl font-bold">{post.title}</h1>
+                <div className="flex justify-center mb-4 relative p-2">
+                    {imageUrl && (
+                        <img
+                            src={imageUrl}
+                            alt={post.title}
+                            className="rounded-xl"
+                        />
+                    )}
                 </div>
-                <div className="flex justify-center browser-css">
+
+                <div className="flex justify-center ">
                     {parse(post.content)}
+                </div>
+                <div className="flex justify-center ">
+                {/* {highlightedCode} */}
                 </div>
             </Container>
         </div>
