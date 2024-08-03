@@ -2,6 +2,7 @@ import React from 'react'
 import authService from '../appwrite/auth'
 import { logout } from '../feature/authSlice'
 import { useDispatch } from 'react-redux'
+import { Button } from '@chakra-ui/react';
 
 function LogoutBtn() {
     const dispatch = useDispatch()
@@ -11,10 +12,13 @@ function LogoutBtn() {
             .catch((error) => { console.log("components/LogoutBtn/error : ", error); })
     }
     return (
-        <button
-            className='inline-bock px-6 py-2 duration-200'
+        <Button
+            variant='ghost'
             onClick={onclickHandler}
-        >Logout</button>
+            mx={2}
+        >
+            Logout
+        </Button>
     )
 }
 

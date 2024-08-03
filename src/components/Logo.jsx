@@ -2,7 +2,7 @@ import React from 'react'
 
 function Logo() {
     return (
-        <div>Logo</div>
+        <div>Techtrenz</div>
     )
 }
 

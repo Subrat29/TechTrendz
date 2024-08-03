@@ -13,6 +13,7 @@ import PostCard2 from './PostCard2'
 import LoginForm from './LoginForm'
 import AuthLayout from './AuthLayout'
 import PostForm from './post-form/PostForm'
+import CodeBlock from './CodeBlock';
 
 export {
     Header,
@@ -29,5 +30,6 @@ export {
     LoginForm,
     AuthLayout,
     PostForm,
-    PostCard2
+    PostCard2,
+    CodeBlock
 }

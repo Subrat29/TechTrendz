@@ -8,6 +8,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import { AddPost, AllUserPosts, EditPost, Home, Login, Post, Signup } from './pages/index'
 import { AuthLayout } from './components/index'
 import { ChakraProvider } from '@chakra-ui/react'
+import Test from './pages/Test.jsx'
 
 
 const router = createBrowserRouter(
@@ -40,6 +41,9 @@ const router = createBrowserRouter(
       } />
       <Route path='/post/:slug' element={
         <Post />
+      } />
+      <Route path='/test' element={
+        <Test/>
       } />
     </Route>
   )

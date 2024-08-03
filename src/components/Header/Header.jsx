@@ -1,83 +1,132 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate, Link } from 'react-router-dom'
-import { Container, Logo, LogoutBtn } from '../index'
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
+import { 
+    Container, 
+    Logo, 
+    LogoutBtn 
+} from '../index';
+import {
+    useMediaQuery,
+    useDisclosure,
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerCloseButton,
+    Button,
+    IconButton,
+    Box,
+    Flex,
+} from '@chakra-ui/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
 
 function Header() {
-    const authStatus = useSelector((state) => state.auth.status) || false
-    const authUserData = useSelector((state) => state.auth.userData) || {}
-    const [user, setUser] = useState('Guest')
-    const navigate = useNavigate()
+    const authStatus = useSelector((state) => state.auth.status) || false;
+    const authUserData = useSelector((state) => state.auth.userData) || {};
+    const [user, setUser] = useState('Guest');
+    const navigate = useNavigate();
     
-    console.log("Header/authstatus: ", authStatus)
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const btnRef = React.useRef();
+    const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
 
     useEffect(() => {
         if (authStatus && authUserData?.name) {
-            setUser(authUserData.name)
+            setUser(authUserData.name);
+        } else {
+            setUser('Guest');
         }
-        else {
-            setUser('Guest')
-        }
-    }, [authUserData, authStatus])
+    }, [authUserData, authStatus]);
 
     const navItems = [
-        {
-            name: 'Home',
-            url: '/',
-            active: true
-        },
-        {
-            name: 'Login',
-            url: '/login',
-            active: !authStatus
-        },
-        {
-            name: 'Signup',
-            url: '/signup',
-            active: !authStatus
-        },
-        {
-            name: 'Your Posts',
-            url: '/alluserposts',
-            active: authStatus
-        },
-        {
-            name: 'Write',
-            url: '/addpost',
-            active: authStatus
-        }
-    ]
+        { name: 'Home', url: '/', active: true },
+        { name: 'Login', url: '/login', active: !authStatus },
+        { name: 'Signup', url: '/signup', active: !authStatus },
+        { name: 'Your Posts', url: '/alluserposts', active: authStatus },
+        { name: 'Write', url: '/addpost', active: authStatus }
+    ];
+
     return (
         <header className='py-3'>
             <Container>
-                <nav className='flex'>
-                    <div className='mr-4'>
+                <Flex justify='space-between' align='center'>
+                    <Box>
                         <Link to='/'>
                             <Logo width='70px' />
                         </Link>
-                    </div>
-                    <ul className='flex ml-auto'>
-                        {navItems.map((item) => item.active ? (
-                            <li key={item.name}>
-                                <button
-                                    className='inline-bock px-6 py-2 duration-200'
+                    </Box>
+                    {isLargerThan768 ? (
+                        <Flex as='nav'>
+                            {navItems.map((item) => item.active && (
+                                <Button
+                                    key={item.name}
+                                    variant='ghost'
                                     onClick={() => navigate(item.url)}
-                                >{item.name}</button>
-                            </li>
-                        ) : (null))}
-                        {authStatus && (
-                            <li>
-                                <LogoutBtn />
-                            </li>
-                        )}
-                    </ul>
-                    <div className="bg-blue-500 rounded p-1 shadow-md">
-                        <span className="text-white text-lg font-semibold">User: {user}</span>
-                    </div>
-                </nav>
+                                    mx={2}
+                                >
+                                    {item.name}
+                                </Button>
+                            ))}
+                            {authStatus && <LogoutBtn />}
+                        </Flex>
+                    ) : (
+                        <>
+                            <IconButton
+                                ref={btnRef}
+                                icon={<HamburgerIcon />}
+                                onClick={onOpen}
+                                variant='outline'
+                            />
+                            <Drawer
+                                isOpen={isOpen}
+                                placement='right'
+                                onClose={onClose}
+                                finalFocusRef={btnRef}
+                            >
+                                <DrawerOverlay />
+                                <DrawerContent>
+                                    <DrawerCloseButton />
+                                    {/* <DrawerHeader>Navigation</DrawerHeader> */}
+                                    <DrawerBody>
+                                        {navItems.map((item) => item.active && (
+                                            <Button
+                                                key={item.name}
+                                                variant='ghost'
+                                                onClick={() => {
+                                                    navigate(item.url);
+                                                    onClose();
+                                                }}
+                                                w='100%'
+                                                my={2}
+                                            >
+                                                {item.name}
+                                            </Button>
+                                        ))}
+                                        {authStatus && (
+                                            <Button
+                                                variant='ghost'
+                                                onClick={() => {
+                                                    // Assuming LogoutBtn has its own functionality
+                                                    onClose();
+                                                }}
+                                                w='100%'
+                                                my={2}
+                                            >
+                                                Logout
+                                            </Button>
+                                        )}
+                                    </DrawerBody>
+                                </DrawerContent>
+                            </Drawer>
+                        </>
+                    )}
+                </Flex>
             </Container>
         </header>
-    )
+    );
 }
 
-export default Header
+export default Header;

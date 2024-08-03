@@ -48,10 +48,11 @@ function PostCard2({ post }) {
                     direction={{ base: 'column', sm: 'row' }}
                     overflow='hidden'
                     variant='outline'
+                    // border='none'
                 >
                     <Stack >
                         <CardBody>
-                            <Heading size='md'>{title}</Heading>
+                            <Heading size='lg'>{title}</Heading>
                             <Text py='2'>
                                 Caffè latte is a coffee beverage of Italian origin made with espresso
                                 and steamed milk.
