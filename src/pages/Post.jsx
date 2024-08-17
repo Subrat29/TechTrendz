@@ -60,41 +60,45 @@ function Post() {
     };
 
     return post ? (
-        <div className="py-8">
-            <Container>
-                <div className="flex justify-center mb-6 relative p-2">
-                    <h1 className="text-2xl font-bold">{post.title}</h1>
-                    {isAuthor && (
-                        <div className="absolute right-6 top-6">
-                            <Link to={`/`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
-                                    Save
+        <div className="min-h-screen py-8">
+            {/* <Container> */}
+                <div className="w-full max-w-4xl mx-auto shadow-lg rounded-lg overflow-hidden">
+                    <div className="p-6">
+                        <h1 className="text-4xl font-bold text-center mb-4">{post.title}</h1>
+                        {isAuthor && (
+                            <div className="flex justify-end mb-4">
+                                <Link to={`/`}>
+                                    <Button bgColor="bg-green-500" className="mr-3">
+                                        Save
+                                    </Button>
+                                </Link>
+                                <Link to={`/edit-post/${post.$id}`}>
+                                    <Button bgColor="bg-yellow-500" className="mr-3">
+                                        Edit
+                                    </Button>
+                                </Link>
+                                <Button bgColor="bg-red-500" onClick={deletePost}>
+                                    Delete
                                 </Button>
-                            </Link>
-                            <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-yellow-500" className="mr-3">
-                                    Edit
-                                </Button>
-                            </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
-                                Delete
-                            </Button>
+                            </div>
+                        )}
+                        {imageUrl && (
+                            <div className="flex justify-center mb-4">
+                                <img
+                                    src={imageUrl}
+                                    alt={post.title}
+                                    className="rounded-lg w-full max-w-md object-cover"
+                                />
+                            </div>
+                        )}
+                        <div className="max-w-none">
+                            <div className="prose prose-lg max-w-none">
+                                {parse(post.content, parseOptions)}
+                            </div>
                         </div>
-                    )}
+                    </div>
                 </div>
-                <div className="flex justify-center mb-4 relative p-2">
-                    {imageUrl && (
-                        <img
-                            src={imageUrl}
-                            alt={post.title}
-                            className="rounded-xl"
-                        />
-                    )}
-                </div>
-                <div className="flex flex-col justify-center ">
-                    {parse(post.content, parseOptions)}
-                </div>
-            </Container>
+            {/* </Container> */}
         </div>
     ) : null;
 }
