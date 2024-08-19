@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-    Container, 
-    Logo, 
-    LogoutBtn 
+import {
+    Container,
+    Logo,
+    LogoutBtn
 } from '../index';
 import {
     useMediaQuery,
@@ -20,15 +20,18 @@ import {
     IconButton,
     Box,
     Flex,
+    useColorMode,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { SunIcon, MoonIcon } from '@chakra-ui/icons';
 
 function Header() {
+    const { colorMode, toggleColorMode } = useColorMode();
     const authStatus = useSelector((state) => state.auth.status) || false;
     const authUserData = useSelector((state) => state.auth.userData) || {};
     const [user, setUser] = useState('Guest');
     const navigate = useNavigate();
-    
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
     const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
@@ -58,6 +61,11 @@ function Header() {
                             <Logo width='70px' />
                         </Link>
                     </Box>
+                    <IconButton
+                        icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+                        onClick={toggleColorMode}
+                        variant="ghost"
+                    />
                     {isLargerThan768 ? (
                         <Flex as='nav'>
                             {navItems.map((item) => item.active && (

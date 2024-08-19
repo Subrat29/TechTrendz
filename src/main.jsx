@@ -9,6 +9,7 @@ import { AddPost, AllUserPosts, EditPost, Home, Login, Post, Signup } from './pa
 import { AuthLayout } from './components/index'
 import { ChakraProvider } from '@chakra-ui/react'
 import Test from './pages/Test.jsx'
+import theme from './theme/index.js'
 
 
 const router = createBrowserRouter(
@@ -51,7 +52,7 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <ChakraProvider>
+     <ChakraProvider theme={theme}>
       <RouterProvider router={router} />
     </ChakraProvider>
   </Provider>
