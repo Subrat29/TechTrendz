@@ -1,79 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import fileservice from "../appwrite/fileConfig"
-import { Link } from 'react-router-dom'
-import { Card, CardBody, CardFooter, Image, Stack, Heading, Text, Button, Center } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import fileservice from "../appwrite/fileConfig";
+import { Link } from 'react-router-dom';
 
 function PostCard2({ post }) {
-    const { $id, title, image, userId, $updatedAt } = post;
-    const [imageUrl, setImageUrl] = useState(null)
-
-    // const allImages = useSelector((state)=>state.images.images)
-    // useEffect(()=>{
-    //     const currentImage = allImages.find((image) => post.image === image.imageId);
-    //     if(currentImage){
-    //         setImageUrl(currentImage.imageUrl)
-    //     }
-    // })
+    const { $id, title, image } = post;
+    const [imageUrl, setImageUrl] = useState(null);
 
     const props = [
         200,                // width, will be resized using this value.
         200,                // height, ignored when 0
         'center',           // crop center
-        '100',               // slight compression
+        '100',              // slight compression
         1,                  // border width
         '000000',           // border color
-        1,                 // border radius
+        1,                  // border radius
         1,                  // full opacity
         0,                  // no rotation
         '000000',           // background color
-        'webp'               // output jpg format
-    ]
+        'webp'              // output jpg format
+    ];
 
     useEffect(() => {
         const fetchImageUrl = async () => {
-            const url = await fileservice.getImagePreview(
-                image,
-                props
-            )
-            setImageUrl(url)
-        }
-        fetchImageUrl()
-    }, [image])
+            const url = await fileservice.getImagePreview(image, props);
+            setImageUrl(url);
+        };
+        fetchImageUrl();
+    }, [image]);
 
     return (
-        <Center>
-            <Link to={`/post/${$id}`}>
-                <Card
-                    direction={{ base: 'column', sm: 'row' }}
-                    overflow='hidden'
-                    variant='outline'
-                    // border='none'
-                >
-                    <Stack >
-                        <CardBody>
-                            <Heading size='lg'>{title}</Heading>
-                            <Text py='2'>
-                                Caffè latte is a coffee beverage of Italian origin made with espresso
-                                and steamed milk.
-                            </Text>
-                        </CardBody>
-                        <CardFooter>
-                            <Heading size='sm'>Read more →</Heading>
-                        </CardFooter>
-                    </Stack>
-                    {imageUrl && <Image
-                        objectFit='cover'
-                        // maxW={{ base: '100%', sm: '300px' }}
+        <div className="flex justify-center">
+            <Link to={`/post/${$id}`} className="w-full sm:flex sm:items-center sm:border sm:rounded-lg sm:overflow-hidden">
+                <div className="flex flex-col justify-between p-4">
+                    <h2 className="text-xl font-semibold">{title}</h2>
+                    <p className="py-2 text-gray-600">
+                        Caffè latte is a coffee beverage of Italian origin made with espresso and steamed milk.
+                    </p>
+                    <div className="mt-4">
+                        <h3 className="text-sm font-medium text-blue-600">Read more →</h3>
+                    </div>
+                </div>
+                {imageUrl && (
+                    <img
+                        className="object-cover w-full h-48 sm:w-48 rounded-lg m-1"
                         src={imageUrl}
                         alt={title}
-                        rounded={10}
-                        p={1}
-                    />}
-                </Card>
+                    />
+                )}
             </Link>
-        </Center>
-    )
+        </div>
+    );
 }
 
-export default PostCard2
+export default PostCard2;

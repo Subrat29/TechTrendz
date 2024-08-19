@@ -1,40 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-    Container,
-    Logo,
-    LogoutBtn
-} from '../index';
-import {
-    useMediaQuery,
-    useDisclosure,
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    Button,
-    IconButton,
-    Box,
-    Flex,
-    useColorMode,
-} from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
-import { SunIcon, MoonIcon } from '@chakra-ui/icons';
 
 function Header() {
-    const { colorMode, toggleColorMode } = useColorMode();
     const authStatus = useSelector((state) => state.auth.status) || false;
     const authUserData = useSelector((state) => state.auth.userData) || {};
     const [user, setUser] = useState('Guest');
     const navigate = useNavigate();
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const btnRef = React.useRef();
-    const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLargerThan768, setIsLargerThan768] = useState(window.innerWidth >= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargerThan768(window.innerWidth >= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         if (authStatus && authUserData?.name) {
@@ -52,87 +36,93 @@ function Header() {
         { name: 'Write', url: '/addpost', active: authStatus }
     ];
 
+    const toggleDrawer = () => setIsOpen(!isOpen);
+
     return (
-        <header className='py-3'>
-            <Container>
-                <Flex justify='space-between' align='center'>
-                    <Box>
+        <header className='py-3 bg-white dark:bg-gray-800'>
+            <div className='container mx-auto px-4'>
+                <div className='flex justify-between items-center'>
+                    <div>
                         <Link to='/'>
-                            <Logo width='70px' />
+                            <img src='/logo.png' alt='Logo' className='w-16' />
                         </Link>
-                    </Box>
-                    <IconButton
-                        icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                        onClick={toggleColorMode}
-                        variant="ghost"
-                    />
+                    </div>
+                    <button
+                        onClick={() => document.documentElement.classList.toggle('dark')}
+                        className='p-2 bg-gray-200 rounded-full dark:bg-gray-600'
+                    >
+                        {document.documentElement.classList.contains('dark') ? '🌞' : '🌙'}
+                    </button>
                     {isLargerThan768 ? (
-                        <Flex as='nav'>
+                        <nav className='flex items-center'>
                             {navItems.map((item) => item.active && (
-                                <Button
+                                <button
                                     key={item.name}
-                                    variant='ghost'
                                     onClick={() => navigate(item.url)}
-                                    mx={2}
+                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
                                 >
                                     {item.name}
-                                </Button>
+                                </button>
                             ))}
-                            {authStatus && <LogoutBtn />}
-                        </Flex>
+                            {authStatus && (
+                                <button
+                                    onClick={() => navigate('/logout')}
+                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+                                >
+                                    Logout
+                                </button>
+                            )}
+                        </nav>
                     ) : (
                         <>
-                            <IconButton
-                                ref={btnRef}
-                                icon={<HamburgerIcon />}
-                                onClick={onOpen}
-                                variant='outline'
-                            />
-                            <Drawer
-                                isOpen={isOpen}
-                                placement='right'
-                                onClose={onClose}
-                                finalFocusRef={btnRef}
+                            <button
+                                onClick={toggleDrawer}
+                                className='p-2 bg-gray-200 rounded-full dark:bg-gray-600'
                             >
-                                <DrawerOverlay />
-                                <DrawerContent>
-                                    <DrawerCloseButton />
-                                    {/* <DrawerHeader>Navigation</DrawerHeader> */}
-                                    <DrawerBody>
-                                        {navItems.map((item) => item.active && (
-                                            <Button
-                                                key={item.name}
-                                                variant='ghost'
-                                                onClick={() => {
-                                                    navigate(item.url);
-                                                    onClose();
-                                                }}
-                                                w='100%'
-                                                my={2}
-                                            >
-                                                {item.name}
-                                            </Button>
-                                        ))}
-                                        {authStatus && (
-                                            <Button
-                                                variant='ghost'
-                                                onClick={() => {
-                                                    // Assuming LogoutBtn has its own functionality
-                                                    onClose();
-                                                }}
-                                                w='100%'
-                                                my={2}
-                                            >
-                                                Logout
-                                            </Button>
-                                        )}
-                                    </DrawerBody>
-                                </DrawerContent>
-                            </Drawer>
+                                🍔
+                            </button>
+                            {isOpen && (
+                                <div className='fixed inset-0 z-50'>
+                                    <div className='fixed inset-0 bg-black opacity-50' onClick={toggleDrawer}></div>
+                                    <div className='fixed top-0 right-0 w-64 h-full bg-white dark:bg-gray-800 p-4'>
+                                        <button
+                                            onClick={toggleDrawer}
+                                            className='text-gray-700 dark:text-gray-200'
+                                        >
+                                            ✖
+                                        </button>
+                                        <div className='mt-4'>
+                                            {navItems.map((item) => item.active && (
+                                                <button
+                                                    key={item.name}
+                                                    onClick={() => {
+                                                        navigate(item.url);
+                                                        toggleDrawer();
+                                                    }}
+                                                    className='block w-full text-left py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+                                                >
+                                                    {item.name}
+                                                </button>
+                                            ))}
+                                            {authStatus && (
+                                                <button
+                                                    onClick={() => {
+                                                        navigate('/logout');
+                                                        toggleDrawer();
+                                                    }}
+                                                    className='block w-full text-left py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+                                                >
+                                                    Logout
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </>
                     )}
-                </Flex>
-            </Container>
+                </div>
+            </div>
         </header>
     );
 }
