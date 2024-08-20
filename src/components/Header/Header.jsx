@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import { Button } from '../ui/button';
 
 function Header() {
     const authStatus = useSelector((state) => state.auth.status) || false;
@@ -75,12 +76,13 @@ function Header() {
                         </nav>
                     ) : (
                         <>
-                            <button
+                            <Button
                                 onClick={toggleDrawer}
-                                className='p-2 bg-gray-200 rounded-full dark:bg-gray-600'
+                                // className='p-2 bg-gray-200 rounded-full dark:bg-gray-600'
+                                variant='destructive'
                             >
-                                🍔
-                            </button>
+                                Shadcn
+                            </Button>
                             {isOpen && (
                                 <div className='fixed inset-0 z-50'>
                                     <div className='fixed inset-0 bg-black opacity-50' onClick={toggleDrawer}></div>
