@@ -3,7 +3,7 @@ import { LoginForm } from '../components/index'
 
 function Login() {
     return (
-        <div className='py-8'>
+        <div className="flex items-center justify-center min-h-screen">
             <LoginForm />
         </div>
     )

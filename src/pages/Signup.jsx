@@ -4,7 +4,7 @@ import { SignupForm } from '../components/index'
 function Signup() {
 
     return (
-        <div className='py-8'>
+        <div className="flex items-center justify-center min-h-screen">
             <SignupForm />
         </div>
     )

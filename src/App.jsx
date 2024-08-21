@@ -11,6 +11,8 @@ import { addImage } from './feature/imageSlice'
 import fileservice from './appwrite/fileConfig'
 // import 'prismjs/themes/prism.css';
 
+// Import the ThemeProvider
+import { ThemeProvider } from './components/theme/theme-provider'
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -84,19 +86,22 @@ function App() {
   };
 
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between' >
-      <div className='w-full block'>
-        <Header />
-        <main>
-          {postsLoading ? (
-            <div className='text-5xl flex items-center justify-center w-full'>Loading posts...</div>
-          ) : (
-            <Outlet />
-          )}
-        </main>
-        <Footer />
+    // Wrapping the entire component tree with ThemeProvider
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className='min-h-screen flex flex-wrap content-between' >
+        <div className='w-full block'>
+          <Header />
+          <main>
+            {postsLoading ? (
+              <div className='text-5xl flex items-center justify-center w-full'>Loading posts...</div>
+            ) : (
+              <Outlet />
+            )}
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   ) : (
     <div className='min-h-screen flex flex-wrap content-between'>
       <div className='w-full block'>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../ui/button';
+import { ModeToggle } from "@/components/theme/mode-toggle";
 
 function Header() {
     const authStatus = useSelector((state) => state.auth.status) || false;
@@ -11,6 +12,7 @@ function Header() {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isLargerThan768, setIsLargerThan768] = useState(window.innerWidth >= 768);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -48,12 +50,7 @@ function Header() {
                             <img src='/logo.png' alt='Logo' className='w-16' />
                         </Link>
                     </div>
-                    <button
-                        onClick={() => document.documentElement.classList.toggle('dark')}
-                        className='p-2 bg-gray-200 rounded-full dark:bg-gray-600'
-                    >
-                        {document.documentElement.classList.contains('dark') ? '🌞' : '🌙'}
-                    </button>
+                    <ModeToggle />
                     {isLargerThan768 ? (
                         <nav className='flex items-center'>
                             {navItems.map((item) => item.active && (
