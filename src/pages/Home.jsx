@@ -1,17 +1,15 @@
-import React, { useMemo, useState } from 'react'
-import { Container, PostCard2 } from '../components/index'
-import { useSelector } from 'react-redux'
+import React, { useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Container from '../components/Container';
+import PostCard2 from '../components/PostCard2';
 
 function Home() {
-    const allPosts = useSelector((state) => state?.posts?.posts)
-    const [posts, setPosts] = useState([])
-    const allImages = useSelector((state)=>state.images.images)
-    console.log("allPosts: ", allPosts);
-    console.log("All images: ", allImages);
+    const allPosts = useSelector((state) => state?.posts?.posts);
+    const [posts, setPosts] = useState([]);
 
     useMemo(() => {
         if (allPosts) {
-            setPosts(allPosts)
+            setPosts(allPosts);
         }
     }, [allPosts]);
 
@@ -28,18 +26,20 @@ function Home() {
                     </div>
                 </Container>
             </div>
-        )
+        );
     }
-    
+
     return (
-        <div className='w-full py-8'>
-            {posts?.map((post) => (
-                <div key={post?.$id} className='p-2'>
-                    <PostCard2 post={post} />
+        <div className="w-full py-8">
+            <Container>
+                <div className="grid grid-cols-1 gap-4">
+                    {posts?.map((post) => (
+                        <PostCard2 key={post?.$id} post={post} />
+                    ))}
                 </div>
-            ))}
+            </Container>
         </div>
-    )
+    );
 }
 
-export default Home
+export default Home;

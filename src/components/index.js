@@ -14,8 +14,11 @@ import LoginForm from './LoginForm'
 import AuthLayout from './AuthLayout'
 import PostForm from './post-form/PostForm'
 import CodeBlock from './CodeBlock';
+export * from "./ui/avatar";
+export * from "./ui/badge";
 export * from "./ui/button";
 export * from "./ui/card";
+export * from "./ui/dropdown-menu";
 export * from "./ui/input";
 export * from "./ui/label";
 
@@ -31,9 +34,9 @@ export {
     RTE,
     SignupForm,
     PostCard,
+    PostCard2,
     LoginForm,
     AuthLayout,
     PostForm,
-    PostCard2,
     CodeBlock
 }
