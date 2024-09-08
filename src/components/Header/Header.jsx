@@ -13,7 +13,6 @@ function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLargerThan768, setIsLargerThan768] = useState(window.innerWidth >= 768);
 
-
     useEffect(() => {
         const handleResize = () => {
             setIsLargerThan768(window.innerWidth >= 768);
@@ -36,28 +35,27 @@ function Header() {
         { name: 'Login', url: '/login', active: !authStatus },
         { name: 'Signup', url: '/signup', active: !authStatus },
         { name: 'Your Posts', url: '/alluserposts', active: authStatus },
-        { name: 'Write', url: '/addpost', active: authStatus }
+        { name: 'Write', url: '/addpost', active: authStatus },
     ];
 
     const toggleDrawer = () => setIsOpen(!isOpen);
 
     return (
-        <header className='py-3 bg-white dark:bg-gray-800'>
+        <header className='py-3 bg-white dark:bg-neutral-900'>
             <div className='container mx-auto px-4'>
                 <div className='flex justify-between items-center'>
                     <div>
                         <Link to='/'>
-                            <img src='/logo.png' alt='Logo' className='w-16' />
+                            <img src='../../../icons/logo.jpeg' alt='Logo' className='w-16' />
                         </Link>
                     </div>
-                    <ModeToggle />
                     {isLargerThan768 ? (
                         <nav className='flex items-center'>
                             {navItems.map((item) => item.active && (
                                 <button
                                     key={item.name}
                                     onClick={() => navigate(item.url)}
-                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded'
                                 >
                                     {item.name}
                                 </button>
@@ -65,20 +63,20 @@ function Header() {
                             {authStatus && (
                                 <button
                                     onClick={() => navigate('/logout')}
-                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded'
                                 >
                                     Logout
                                 </button>
                             )}
+                            <ModeToggle />
                         </nav>
                     ) : (
                         <>
                             <Button
                                 onClick={toggleDrawer}
-                                // className='p-2 bg-gray-200 rounded-full dark:bg-gray-600'
-                                variant='destructive'
+                                variant='outline'
                             >
-                                Shadcn
+                                ☰
                             </Button>
                             {isOpen && (
                                 <div className='fixed inset-0 z-50'>
@@ -86,11 +84,12 @@ function Header() {
                                     <div className='fixed top-0 right-0 w-64 h-full bg-white dark:bg-gray-800 p-4'>
                                         <button
                                             onClick={toggleDrawer}
-                                            className='text-gray-700 dark:text-gray-200'
+                                            variant='outline'
                                         >
                                             ✖
                                         </button>
                                         <div className='mt-4'>
+                                            <ModeToggle />
                                             {navItems.map((item) => item.active && (
                                                 <button
                                                     key={item.name}

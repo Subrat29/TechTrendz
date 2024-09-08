@@ -23,8 +23,6 @@ export * from "./ui/input";
 export * from "./ui/label";
 
 export {
-    // Button,
-    // Input,
     Header,
     Footer,
     Logo,

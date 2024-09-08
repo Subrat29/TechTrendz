@@ -1,13 +1,13 @@
 // components/mode-toggle.js
 import React from "react";
 import { Sun, Moon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/index";
 import { useTheme } from "@/components/theme/theme-provider";
 
 export function ModeToggle() {
