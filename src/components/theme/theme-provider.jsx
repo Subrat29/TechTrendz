@@ -1,4 +1,3 @@
-// components/theme-provider.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext({

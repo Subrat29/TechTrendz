@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../ui/button';
-import { ModeToggle } from "@/components/theme/mode-toggle";
+import {
+    Logo,
+    Button,
+    ModeToggle,
+    LogoutBtn,
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger
+} from "@/components/index";
 
 function Header() {
     const authStatus = useSelector((state) => state.auth.status) || false;
@@ -10,24 +20,8 @@ function Header() {
     const [user, setUser] = useState('Guest');
     const navigate = useNavigate();
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [isLargerThan768, setIsLargerThan768] = useState(window.innerWidth >= 768);
-
     useEffect(() => {
-        const handleResize = () => {
-            setIsLargerThan768(window.innerWidth >= 768);
-        };
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-        if (authStatus && authUserData?.name) {
-            setUser(authUserData.name);
-        } else {
-            setUser('Guest');
-        }
+        setUser(authStatus && authUserData?.name ? authUserData.name : 'Guest');
     }, [authUserData, authStatus]);
 
     const navItems = [
@@ -38,87 +32,78 @@ function Header() {
         { name: 'Write', url: '/addpost', active: authStatus },
     ];
 
-    const toggleDrawer = () => setIsOpen(!isOpen);
-
     return (
-        <header className='py-3 bg-white dark:bg-neutral-900'>
+        <header className='py-3 bg-neutral-50 border-b dark:bg-neutral-900'>
             <div className='container mx-auto px-4'>
                 <div className='flex justify-between items-center'>
-                    <div>
-                        <Link to='/'>
-                            <img src='../../../icons/logo.jpeg' alt='Logo' className='w-16' />
-                        </Link>
-                    </div>
-                    {isLargerThan768 ? (
-                        <nav className='flex items-center'>
-                            {navItems.map((item) => item.active && (
-                                <button
-                                    key={item.name}
-                                    onClick={() => navigate(item.url)}
-                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded'
-                                >
-                                    {item.name}
-                                </button>
-                            ))}
-                            {authStatus && (
-                                <button
-                                    onClick={() => navigate('/logout')}
-                                    className='mx-2 px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 rounded'
-                                >
-                                    Logout
-                                </button>
-                            )}
-                            <ModeToggle />
-                        </nav>
-                    ) : (
-                        <>
+                    {/* Logo */}
+                    <Link to='/'>
+                        <Logo />
+                    </Link>
+
+                    {/* Large Screen Navigation */}
+                    <nav className='hidden md:flex items-center space-x-4'>
+                        {navItems.map((item) => item.active && (
                             <Button
-                                onClick={toggleDrawer}
+                                key={item.name}
+                                onClick={() => navigate(item.url)}
                                 variant='outline'
+                                className="px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800" // Added padding, font size, and hover effect
                             >
-                                ☰
+                                {item.name}
                             </Button>
-                            {isOpen && (
-                                <div className='fixed inset-0 z-50'>
-                                    <div className='fixed inset-0 bg-black opacity-50' onClick={toggleDrawer}></div>
-                                    <div className='fixed top-0 right-0 w-64 h-full bg-white dark:bg-gray-800 p-4'>
-                                        <button
-                                            onClick={toggleDrawer}
+                        ))}
+                        {authStatus && (
+                            <LogoutBtn
+                                className="px-4 py-2 rounded-md text-sm font-medium"
+                            />
+                        )}
+                        {/* Added margin for better alignment */}
+                        <div className="ml-4">
+                            <ModeToggle />
+                        </div>
+                    </nav>
+
+                    {/* Mobile View Navigation */}
+                    <div className="md:hidden">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant='outline' className="px-2 py-1 text-lg font-bold">
+                                    ☰
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="right">
+                                <SheetHeader className='border-b'>
+                                    <SheetTitle>techTrenz</SheetTitle>
+                                    <SheetDescription>
+                                        {/* Explore the available options below. */}
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className='mt-4'>
+                                    {navItems.map((item) => item.active && (
+                                        <Button
+                                            key={item.name}
+                                            onClick={() => {
+                                                navigate(item.url);
+                                            }}
                                             variant='outline'
+                                            className="block w-full text-centers px-4 py-2 mt-2 text-sm font-medium transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-md" // Improved mobile button layout
                                         >
-                                            ✖
-                                        </button>
-                                        <div className='mt-4'>
-                                            <ModeToggle />
-                                            {navItems.map((item) => item.active && (
-                                                <button
-                                                    key={item.name}
-                                                    onClick={() => {
-                                                        navigate(item.url);
-                                                        toggleDrawer();
-                                                    }}
-                                                    className='block w-full text-left py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
-                                                >
-                                                    {item.name}
-                                                </button>
-                                            ))}
-                                            {authStatus && (
-                                                <button
-                                                    onClick={() => {
-                                                        navigate('/logout');
-                                                        toggleDrawer();
-                                                    }}
-                                                    className='block w-full text-left py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
-                                                >
-                                                    Logout
-                                                </button>
-                                            )}
-                                        </div>
+                                            {item.name}
+                                        </Button>
+                                    ))}
+                                    {authStatus && (
+                                        <LogoutBtn
+                                            className="block w-full text-center px-4 py-2 mt-2 text-sm font-medium" // Improved mobile button layout
+                                        />
+                                    )}
+                                    <div className="mt-3 text-center">
+                                        <ModeToggle />
                                     </div>
                                 </div>
-                            )}
-                        </>
-                    )}
+                            </SheetContent>
+                        </Sheet>
+                    </div>
                 </div>
             </div>
         </header>

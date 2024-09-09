@@ -2,8 +2,9 @@ import React from 'react'
 import authService from '../appwrite/auth'
 import { logout } from '../feature/authSlice'
 import { useDispatch } from 'react-redux'
+import { Button } from '../components/index'
 
-function LogoutBtn() {
+function LogoutBtn({ className }) {
     const dispatch = useDispatch()
     const onclickHandler = () => {
         authService.logOut()
@@ -11,11 +12,13 @@ function LogoutBtn() {
             .catch((error) => { console.log("components/LogoutBtn/error : ", error); })
     }
     return (
-        <button
+        <Button
             onClick={onclickHandler}
+            variant='destructive'
+            className={className}
         >
             Logout
-        </button>
+        </Button>
     )
 }
 

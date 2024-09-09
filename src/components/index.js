@@ -14,6 +14,8 @@ import LoginForm from './LoginForm'
 import AuthLayout from './AuthLayout'
 import PostForm from './post-form/PostForm'
 import CodeBlock from './CodeBlock';
+import { ModeToggle } from './theme/mode-toggle'
+import { ThemeProvider, useTheme } from './theme/theme-provider'
 export * from "./ui/avatar";
 export * from "./ui/badge";
 export * from "./ui/button";
@@ -21,6 +23,7 @@ export * from "./ui/card";
 export * from "./ui/dropdown-menu";
 export * from "./ui/input";
 export * from "./ui/label";
+export * from "./ui/sheet"
 
 export {
     Header,
@@ -36,5 +39,8 @@ export {
     LoginForm,
     AuthLayout,
     PostForm,
-    CodeBlock
+    CodeBlock,
+    ModeToggle,
+    ThemeProvider,
+    useTheme
 }
