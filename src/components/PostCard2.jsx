@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Eye, ThumbsUp, Tag } from 'lucide-react';
 import fileservice from "../appwrite/fileConfig";
 import { Link } from 'react-router-dom';
 
@@ -92,26 +93,33 @@ const PostCard2 = ({ post }) => {
 
                     {/* Image */}
                     {imageUrl && (
-                        <div className="w-full rounded-xl md:rounded-lg bg-gray-100 dark:bg-gray-900 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
-                            <div className="h-40 w-64 sm:w-full sm:h-full">
-                                <img
-                                    className="block w-full h-full object-cover overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 focus:dark:ring-offset-slate-800"
-                                    src={imageUrl}
-                                    alt={title}
-                                />
-                            </div>
+                        <div className="w-full rounded-xl md:rounded-lg relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
+                            <Link to={`/post/${$id}`}>
+                                <div className="h-40 w-64 sm:w-full sm:h-full">
+                                    <img
+                                        className="block w-full h-full object-cover overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 focus:dark:ring-offset-slate-800"
+                                        src={imageUrl}
+                                        alt={title}
+                                    />
+                                </div>
+                            </Link>
                         </div>
                     )}
                 </div>
-
 
                 <section className="flex flex-col gap-5">
                     <div className='flex flex-col sm:flex-row sm:items-center justify-between text-slate-600 dark:text-slate-300 text-sm'>
 
                         {/* Views and Likes */}
                         <div className="flex flex-row items-center gap-2 mb-2 sm:mb-0">
-                            <p className="text-sm text-gray-500">📖 {views} reads</p>
-                            <p className="text-sm text-gray-500">👍 {likes} likes</p>
+                            <div className="flex items-center gap-1">
+                                <Eye className="w-4 h-4" />
+                                <p className="text-sm text-gray-500">{views} reads</p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <ThumbsUp className="w-4 h-4" />
+                                <p className="text-sm text-gray-500">{likes} likes</p>
+                            </div>
                         </div>
 
                         {/* Tags */}
