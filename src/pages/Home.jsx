@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import Container from '../components/Container';
-import PostCard2 from '../components/PostCard2';
+import { Container, PostCard2 } from '../components/index'
 
 function Home() {
-    const allPosts = useSelector((state) => state?.posts?.posts);
+    const allPosts = useSelector((state) => state?.posts?.posts) || null;
     const [posts, setPosts] = useState([]);
 
     useMemo(() => {
@@ -15,7 +14,7 @@ function Home() {
 
     if (posts?.length === 0) {
         return (
-            <div className="w-full py-8 mt-4 text-center">
+            <div className="w-full min-h-screen py-8 mt-4 text-center">
                 <Container>
                     <div className="flex flex-wrap">
                         <div className="p-2 w-full">
@@ -30,7 +29,7 @@ function Home() {
     }
 
     return (
-        <div className="w-full py-8">
+        <div className="w-full min-h-screen py-8">
             <Container>
                 <div className="grid grid-cols-1 gap-4">
                     {posts?.map((post) => (

@@ -5,7 +5,7 @@ import Footer from './Footer/Footer'
 import Logo from './Logo'
 import Container from './Container'
 import LogoutBtn from './LogoutBtn'
-import Select from './Select'
+// import Select from './Select'
 import RTE from './RTE'
 import SignupForm from './SignupForm'
 import PostCard from './PostCard'
@@ -24,6 +24,7 @@ export * from "./ui/dropdown-menu";
 export * from "./ui/input";
 export * from "./ui/label";
 export * from "./ui/sheet"
+export * from "./ui/select"
 
 export {
     Header,
@@ -31,7 +32,6 @@ export {
     Logo,
     Container,
     LogoutBtn,
-    Select,
     RTE,
     SignupForm,
     PostCard,

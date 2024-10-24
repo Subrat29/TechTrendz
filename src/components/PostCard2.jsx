@@ -1,143 +1,212 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Eye, ThumbsUp, Tag } from 'lucide-react';
-import fileservice from "../appwrite/fileConfig";
+import { Eye, ThumbsUp, Calendar, User, ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import PropTypes from 'prop-types'; // Added PropTypes import
+import fileservice from "../appwrite/fileConfig";
 
-// Format the date to "Aug 23, 2024"
-const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-};
 
-const PostCard2 = ({ post }) => {
-    const {
-        $id,
-        title,
-        image,
-        $createdAt,
-        content,
-        author,
-        views = 34,
-        likes = 12,
-        tags = ['Node.js', 'React', 'Html', 'Css']
-    } = post;
+const PostCard = ({ post }) => {
+  const {
+    $id,
+    title = 'Untitled Post',
+    image,
+    $createdAt = new Date().toISOString(),
+    content = '',
+    author,
+    views = 0,
+    likes = 0,
+    tags = []
+  } = post || {};
 
-    const [imageUrl, setImageUrl] = useState(null);
-    const [authorDetails, setAuthorDetails] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const props = useMemo(() => [
-        ,                // width, reduced to fit better
-        ,                // further reduced height for better balance with text
-        'center',           // crop center
-        '85',               // moderate compression
-        0,                  // no border width
-        '000000',           // border color (not used)
-        0,                  // no border radius (for a clean fit)
-        1,                  // full opacity
-        0,                  // no rotation
-        'FFFFFF',           // background color, should match your card's background
-        'webp'              // output format
-    ], []);
+  const formattedDate = useMemo(() => {
+    try {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date($createdAt).toLocaleDateString('en-US', options);
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  }, [$createdAt]);
 
-    useEffect(() => {
-        const fetchImageUrl = async () => {
-            try {
-                const url = await fileservice.getImagePreview(image, props);
-                setImageUrl(url);
-            } catch (err) {
-                console.error('Error fetching image:', err);
-            }
-        };
-        if (image) fetchImageUrl();
-    }, [image, props]);
+  const sanitizedContent = useMemo(() => {
+    try {
+      return content
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+        .substring(0, 200);
+    } catch (error) {
+      return '';
+    }
+  }, [content]);
 
-    const formattedDate = useMemo(() => formatDate($createdAt), [$createdAt]);
+  useEffect(() => {
+    const loadImage = async () => {
+      setIsLoading(true);
+      try {
+        if (!image) {
+          setImageError(true);
+          return;
+        }
+
+        // Direct image URL if it's already a full URL
+        if (image.startsWith('http')) {
+          setImageUrl(image);
+        } else {
+          // If using fileservice
+          const url = await fileservice.getImagePreview(image); // Changed to getFilePreview
+          setImageUrl(url);
+        }
+        setImageError(false);
+      } catch (err) {
+        console.error('Error loading image:', err);
+        setImageError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadImage();
+  }, [image]);
+
+  const ImageComponent = () => {
+    if (imageError || !imageUrl) {
+      return (
+        <div className="w-full h-full flex items-center justify-center bg-muted">
+          <ImageIcon className="h-8 w-8 text-muted-foreground" />
+        </div>
+      );
+    }
 
     return (
-        <div className="flex flex-col sm:flex-row items-start p-4 space-y-4 sm:space-y-0 sm:space-x-4 border-b md:border md:rounded-lg overflow-hidden">
-            {/* Content */}
-            <div className="flex-grow space-y-2">
-                {/* Author and Date */}
-                <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                        <img
-                            className="w-full h-full rounded-full"
-                            src="https://github.com/shadcn.png"
-                            alt="Author"
-                        />
-                    </div>
-                    <div>
-                        <p className="text-sm font-semibold">{authorDetails ? authorDetails.name : 'Unknown Author'}</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 font-normal">{formattedDate}</p>
-                    </div>
-                </div>
-
-                {/* Title and Description */}
-                <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 justify-between">
-                    <Link to={`/post/${$id}`}>
-                        {/* Title and Description */}
-                        <div className="flex flex-col gap-1">
-                            <div>
-                                <h1 className="font-heading text-base sm:text-xl font-semibold sm:font-bold text-slate-700 dark:text-slate-200 hn-break-words cursor-pointer">
-                                    {title}
-                                </h1>
-                            </div>
-                            <div className="hidden md:block">
-                                <span className="text-base font-normal text-slate-500 dark:text-slate-400 hn-break-words cursor-pointer md:line-clamp-2">
-                                    {/* Render HTML content */}
-                                    <span dangerouslySetInnerHTML={{ __html: content.substring(0, 300) }} />
-                                </span>
-                            </div>
-                        </div>
-                    </Link>
-
-                    {/* Image */}
-                    {imageUrl && (
-                        <div className="w-full rounded-xl md:rounded-lg relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
-                            <Link to={`/post/${$id}`}>
-                                <div className="h-40 w-64 sm:w-full sm:h-full">
-                                    <img
-                                        className="block w-full h-full object-cover overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 focus:dark:ring-offset-slate-800"
-                                        src={imageUrl}
-                                        alt={title}
-                                    />
-                                </div>
-                            </Link>
-                        </div>
-                    )}
-                </div>
-
-                <section className="flex flex-col gap-5">
-                    <div className='flex flex-col sm:flex-row sm:items-center justify-between text-slate-600 dark:text-slate-300 text-sm'>
-
-                        {/* Views and Likes */}
-                        <div className="flex flex-row items-center gap-2 mb-2 sm:mb-0">
-                            <div className="flex items-center gap-1">
-                                <Eye className="w-4 h-4" />
-                                <p className="text-sm text-gray-500">{views} reads</p>
-                            </div>
-                            <div className="flex items-center gap-1">
-                                <ThumbsUp className="w-4 h-4" />
-                                <p className="text-sm text-gray-500">{likes} likes</p>
-                            </div>
-                        </div>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap items-center gap-1">
-                            {tags?.map((tag, index) => (
-                                <span
-                                    key={index}
-                                    className="text-sm border rounded-md px-2 py-1"
-                                >
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
+      <img
+        src={imageUrl}
+        alt={title}
+        className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-200"
+        onError={() => setImageError(true)}
+      />
     );
-}
+  };
 
-export default React.memo(PostCard2);
+  if (isLoading) {
+    return (
+      <Card className="w-full animate-pulse">
+        <CardContent className="p-4">
+          <div className="flex items-center space-x-4 mb-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-4 w-[150px]" />
+            </div>
+          </div>
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-3/4" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="w-full hover:shadow-lg transition-shadow duration-200">
+      <CardContent className="p-4 sm:p-6">
+        {/* Author and Date Section */}
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div className="flex items-center space-x-3">
+            <Avatar className="h-10 w-10 shrink-0">
+              <AvatarImage 
+                src={author?.avatar || "https://github.com/shadcn.png"} 
+                alt={author?.name || 'Author'}
+              />
+              <AvatarFallback>
+                <User className="h-6 w-6 text-muted-foreground" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <p className="text-sm font-medium truncate">
+                {author?.name || 'Anonymous'}
+              </p>
+              <div className="flex items-center text-sm text-muted-foreground">
+                <Calendar className="mr-1 h-3 w-3 shrink-0" />
+                <span className="truncate">{formattedDate}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <Link 
+          to={`/post/${$id}`} 
+          className="group block"
+          onClick={(e) => {
+            if (!$id) {
+              e.preventDefault();
+              console.error('Post ID is missing');
+            }
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-[1fr,200px] gap-4 md:gap-6">
+            <div className="space-y-3 min-w-0">
+              <h2 className="text-lg sm:text-xl font-semibold leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                {title}
+              </h2>
+              <p className="text-muted-foreground text-sm sm:text-base line-clamp-2 break-words">
+                {sanitizedContent && (
+                  <span 
+                    dangerouslySetInnerHTML={{ 
+                      __html: sanitizedContent + (content.length > 200 ? '...' : '') 
+                    }} 
+                  />
+                )}
+              </p>
+            </div>
+
+            <div className="relative h-40 sm:h-32 rounded-lg overflow-hidden">
+              <ImageComponent />
+            </div>
+          </div>
+        </Link>
+
+        {/* Footer Section */}
+        <div className="mt-4 pt-4 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center space-x-4 text-muted-foreground">
+            <div className="flex items-center space-x-1">
+              <Eye className="h-4 w-4" />
+              <span className="text-sm">{views.toLocaleString()} reads</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <ThumbsUp className="h-4 w-4" />
+              <span className="text-sm">{likes.toLocaleString()} likes</span>
+            </div>
+          </div>
+
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tags.slice(0, 4).map((tag, index) => (
+                <Badge 
+                  key={index} 
+                  variant="secondary"
+                  className="hover:bg-secondary/80 cursor-pointer truncate max-w-[150px]"
+                >
+                  {tag}
+                </Badge>
+              ))}
+              {tags.length > 4 && (
+                <Badge variant="secondary">
+                  +{tags.length - 4}
+                </Badge>
+              )}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default React.memo(PostCard);

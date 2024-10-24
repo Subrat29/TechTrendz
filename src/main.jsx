@@ -8,7 +8,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import { AddPost, AllUserPosts, EditPost, Home, Login, Post, Signup } from './pages/index'
 import { AuthLayout } from './components/index'
 import Test from './pages/Test.jsx'
-
+import { Toaster } from "@/components/ui/toaster"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -51,5 +51,6 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
       <RouterProvider router={router} />
+      <Toaster />
   </Provider>
 )

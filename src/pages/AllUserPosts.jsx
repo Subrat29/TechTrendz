@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import { Container, PostCard2 } from '../components/index'
 import { useSelector } from 'react-redux'
 
 function AllUserPosts() {
-    const userData = useSelector((state) => state.auth.userData) || null
-    const allPosts = useSelector((state) => state.posts.posts) || null
+    const userData = useSelector((state) => state?.auth?.userData) || null
+    const allPosts = useSelector((state) => state?.posts?.posts) || null
     const [posts, setPosts] = useState([])
     const [id, setId] = useState(null)
-    
+
     useEffect(() => {
         if (userData) {
             setId(userData.$id)
@@ -15,7 +15,7 @@ function AllUserPosts() {
     }, [userData, id])
 
 
-    useEffect(() => {
+    useMemo(() => {
         if (id && allPosts) {
             const userPosts = allPosts?.filter((post) => (post?.userId === id))
             setPosts(userPosts)
@@ -24,7 +24,7 @@ function AllUserPosts() {
 
     if (posts?.length === 0) {
         return (
-            <div className="w-full py-8 mt-4 text-center">
+            <div className="w-full min-h-screen py-8 mt-4 text-center">
                 <Container>
                     <div className="flex flex-wrap">
                         <div className="p-2 w-full">
@@ -39,14 +39,16 @@ function AllUserPosts() {
     }
 
     return (
-        <div className='w-full py-8'>
-            {posts?.map((post) => (
-                <div key={post.$id} className='p-2'>
-                    <PostCard2 post={post} />
+        <div className="w-full min-h-screen py-8">
+            <Container>
+                <div className="grid grid-cols-1 gap-4">
+                    {posts?.map((post) => (
+                        <PostCard2 key={post?.$id} post={post} />
+                    ))}
                 </div>
-            ))}
+            </Container>
         </div>
-    )
+    );
 }
 
 export default AllUserPosts
