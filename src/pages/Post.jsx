@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -48,13 +47,20 @@ const parseOptions = {
     }
 };
 
-// Extracted components for better organization and reusability
+const sharingPlatforms = [
+    { name: 'Twitter', icon: Twitter },
+    { name: 'Facebook', icon: Facebook },
+    { name: 'LinkedIn', icon: Linkedin },
+];
+
+// Extracted reusable component for Author Info
 const AuthorInfo = ({ author, createdAt, readingTime, isAuthor }) => (
     <motion.div
         className="flex items-center space-x-4"
         whileHover={{ scale: 1.02 }}
     >
         <div className="relative">
+            {/* Avatar Placeholder */}
             <div className="h-14 w-14 rounded-full bg-gradient-to-r from-violet-500 to-pink-500 p-0.5">
                 <div className="h-full w-full rounded-full bg-white dark:bg-gray-900 flex items-center justify-center">
                     <span className="text-xl font-bold bg-gradient-to-r from-violet-500 to-pink-500 text-transparent bg-clip-text">
@@ -92,11 +98,7 @@ const ShareMenu = ({ isOpen, onClose, onShare, onCopy }) => (
                 className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-xl ring-1 ring-gray-900/5 dark:ring-white/10 overflow-hidden"
             >
                 <div className="p-2 space-y-1">
-                    {[
-                        { name: 'Twitter', icon: Twitter },
-                        { name: 'Facebook', icon: Facebook },
-                        { name: 'LinkedIn', icon: Linkedin },
-                    ].map(({ name, icon: Icon }) => (
+                    {sharingPlatforms.map(({ name, icon: Icon }) => (
                         <button
                             key={name}
                             onClick={() => onShare(name)}
@@ -409,7 +411,7 @@ const Post = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-8 right-8 p-2 bg-violet-500 text-white rounded-full shadow-lg"
+                        className="fixed bottom-8 right-8 p-2 bg-slate-800 text-white rounded-full shadow-lg"
                     >
                         <ChevronUp className="w-6 h-6" />
                     </motion.button>

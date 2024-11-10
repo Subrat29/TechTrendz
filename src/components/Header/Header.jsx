@@ -11,7 +11,8 @@ import {
     SheetDescription,
     SheetHeader,
     SheetTitle,
-    SheetTrigger
+    SheetTrigger,
+    SheetClose, // Import SheetClose to use for automatic close behavior
 } from "@/components/index";
 
 function Header() {
@@ -32,13 +33,17 @@ function Header() {
         { name: 'Write', url: '/addpost', active: authStatus },
     ];
 
+    const handleNavigation = (url) => {
+        navigate(url);
+    };
+
     return (
-        <header className="py-3 bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700  transition-colors duration-300">
+        <header className="py-3 bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700 transition-colors duration-300">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center">
                     {/* Logo */}
                     <Link to="/">
-                        <Logo className="w-32 h-auto" /> {/* Adjusted size for slate theme */}
+                        <Logo className="w-32 h-auto" />
                     </Link>
 
                     {/* Large Screen Navigation */}
@@ -46,7 +51,7 @@ function Header() {
                         {navItems.map((item) => item.active && (
                             <Button
                                 key={item.name}
-                                onClick={() => navigate(item.url)}
+                                onClick={() => handleNavigation(item.url)}
                                 variant="ghost"
                                 className="px-4 py-2 text-sm font-semibold rounded-md text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
                             >
@@ -76,25 +81,24 @@ function Header() {
                             <SheetContent side="right">
                                 <SheetHeader className="border-b border-gray-300 dark:border-gray-700">
                                     <SheetTitle>TechTrendz</SheetTitle>
-                                    <SheetDescription>
-                                        {/* Explore the available options below. */}
-                                    </SheetDescription>
+                                    <SheetDescription />
                                 </SheetHeader>
                                 <div className="mt-4">
                                     {navItems.map((item) => item.active && (
-                                        <Button
-                                            key={item.name}
-                                            onClick={() => {
-                                                navigate(item.url);
-                                            }}
-                                            variant="ghost"
-                                            className="block w-full text-center px-4 py-2 mt-2 text-sm font-semibold text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200"
-                                        >
-                                            {item.name}
-                                        </Button>
+                                        <SheetClose asChild key={item.name}>
+                                            <Button
+                                                onClick={() => handleNavigation(item.url)}
+                                                variant="ghost"
+                                                className="block w-full text-center px-4 py-2 mt-2 text-sm font-semibold text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200"
+                                            >
+                                                {item.name}
+                                            </Button>
+                                        </SheetClose>
                                     ))}
                                     {authStatus && (
-                                        <LogoutBtn className="block w-full text-center px-4 py-2 mt-2 text-sm font-semibold" />
+                                        <SheetClose asChild>
+                                            <LogoutBtn className="block w-full text-center px-4 py-2 mt-2 text-sm font-semibold" />
+                                        </SheetClose>
                                     )}
                                     <div className="mt-3 text-center">
                                         <ModeToggle />

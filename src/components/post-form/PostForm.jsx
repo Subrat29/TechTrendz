@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -27,7 +27,7 @@ const PostForm = ({ post }) => {
         defaultValues: {
             title: post?.title || "",
             slug: post?.$id || "",
-            content: post?.content || "No content",
+            content: post?.content || "",
             status: post?.status || "active",
         }
     });
@@ -38,6 +38,7 @@ const PostForm = ({ post }) => {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
+
 
     // Watch for file input changes
     const watchImage = watch("image");
@@ -221,7 +222,7 @@ const PostForm = ({ post }) => {
                     {/* Status Section */}
                     <div className="w-[240px]">
                         <Label htmlFor="status">Status</Label>
-                        <Select 
+                        <Select
                             defaultValue={getValues("status")}
                             onValueChange={(value) => setValue("status", value)}
                         >
@@ -239,17 +240,17 @@ const PostForm = ({ post }) => {
                     {/* Content Section */}
                     <div className="space-y-2">
                         <Label>Content</Label>
-                        <RTE 
-                            name="content" 
-                            control={control} 
+                        <RTE
+                            name="content"
+                            control={control}
                             defaultValue={getValues("content")}
                         />
                     </div>
 
                     {/* Submit Button */}
                     <div className="flex justify-end">
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             className="w-full md:w-auto"
                             disabled={isLoading}
                         >
