@@ -1,49 +1,116 @@
-# TechTrenz - A Blog App
+# TechTrendz 🚀
 
-TechTrenz is a feature-rich web application that empowers users to share their thoughts and insights by publishing articles. Seamlessly integrating user authentication, a robust rich text editor, and Appwrite as the backend, TechTrenz ensures a smooth and secure experience for both writers and readers.
+**TechTrendz** is a sleek blogging platform for tech enthusiasts to create, share, and discover articles. Users can enjoy a modern interface, intuitive editing, and personalized theme options.
 
-## Features
+## Table of Contents
 
-- **User Authentication:** Secure signup and login using email.
-- **Article Management:** Create, edit, and delete articles with ease.
-- **Rich Text Editor:** Powered by TinyMCE, the editor offers a plethora of formatting options including font styles, colors, headings, indentations, images, tables, special characters, and numbering.
-- **Browse Articles:** Users can explore a dedicated section to read and engage with articles posted by others.
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [⚙️ Setup and Installation](#️-setup-and-installation)
+- [📱 Screens and Functionalities](#-screens-and-functionalities)
+- [🖼️ Screenshots](#-screenshots)
+  - [Desktop View](#desktop-view)
+  - [Mobile View](#mobile-view)
+- [📊 Architecture and Data Flow Diagram](#-architecture-and-data-flow-diagram)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
 
-## Technologies Used
+## ✨ Features
 
-- **React (Frontend):** A versatile JavaScript library for building user interfaces.
-- **Tailwind CSS (Styling):** A utility-first CSS framework for efficient and responsive designs.
-- **Appwrite (Backend):** An end-to-end backend server that simplifies backend tasks, providing secure user authentication and data storage.
+- **🔐 User Authentication**: Secure sign-up, sign-in, and log out.
+- **🏠 Home Feed**: Explore tech blogs viewable by all users.
+- **📑 Your Posts**: Manage your posts with visibility settings.
+- **✍️ Write Posts**: Rich text editor with TinyMCE for formatting, images, and code.
+- **🌗 Theme Toggle**: Dark, light, or system theme for a custom experience.
 
-## Dependencies
+## 🛠️ Tech Stack
 
-- **"@reduxjs/toolkit": "^2.0.1"**
-- **"@tinymce/tinymce-react": "^4.3.2"**
-- **"appwrite": "^13.0.1"**
-- **"html-react-parser": "^5.1.1"**
-- **"react": "^18.2.0"**
-- **"react-dom": "^18.2.0"**
-- **"react-hook-form": "^7.49.3"**
-- **"react-redux": "^9.1.0"**
-- **"react-router-dom": "^6.21.3"**
+- **Frontend**: ReactJS, Redux, TailwindCSS, Shadcn
+- **Backend as a Service**: Appwrite (auth, database, storage)
 
-## Installation
+## ⚙️ Setup and Installation
 
-1. **Clone the Repository:** `git clone https://github.com/shk-ubd/TechTrendz.git`
-2. **Navigate to the Project Directory:** `cd TechTrendz`
-3. **Install Dependencies:** `npm install`
+### Prerequisites
+
+- Node.js (>=14.x), Appwrite setup
+
+### Steps
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Subrat29/TechTrendz
+   cd techtrendz
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure Appwrite**:
+   - Setup `.env` with your Appwrite credentials:
+     ```bash
+     VITE_APPWRITE_URL=""
+     VITE_APPWRITE_PROJECT_ID=""
+     VITE_APPWRITE_COLLECTION_ID=""
+     VITE_APPWRITE_DATABASE_ID=""
+     VITE_APPWRITE_BUCKET_ID=""
+     VITE_APPWRITE_API_KEY=""
+     ```
+
+4. **Run the App**:
+   ```bash
+   npm start
+   ```
+
+## 📱 Screens and Functionalities
+
+1. **Auth (🔐)**: Secure sign in, sign up, and logout with Appwrite.
+2. **Home Feed (🏠)**: Discover all active blogs.
+3. **Your Posts (📑)**: Manage your authored blogs.
+4. **Write Post (✍️)**: Editor for rich content with TinyMCE.
+5. **Theme Toggle (🌗)**: Choose dark, light, or system theme.
+
+## 🖼️ Screenshots
+
+### Desktop View
+
+1. **Home Feed**: ![Home Feed](./screenshots/home-page1.png)
+2. **Single Post**: ![Home Feed](./screenshots/post-page1.png)
+3. **Write Post**: ![Write Post](./screenshots/write-page1.png)
+
+### Mobile View
+
+1. **Home Feed**: ![Home Feed](./screenshots/home-page2.png)
+2. **Mobile Header**: ![Home Feed](./screenshots/header.png)
+3. **Single Post**: ![Home Feed](./screenshots/post-page2.png)
+4. **Write Post**: ![Write Post](./screenshots/write-page2.png)
 
 
-## Usage
+## 📊 Architecture and Data Flow Diagram
 
-1. **Sign Up and Log In:** Create an account using your email and log in to access the full suite of features.
-2. **Create and Manage Articles:** Navigate to "Add Post" in the navbar to publish a post. Edit or delete your articles as needed.
-3. **Explore All Posts:** Visit the "All Posts" section to discover articles published by other users.
+### Overview
 
-## Rich Text Editor
+- **Frontend**: React, Redux for state, TinyMCE for text editor
+- **Backend (Appwrite)**: Manages auth, storage, database
 
-The application leverages TinyMCE, providing an intuitive and powerful rich text editing experience. Users can format text, insert multimedia elements, and craft engaging articles akin to professional word processors.
+### Data Flow
 
-## Appwrite Integration
+![Data Flow](./screenshots/data-flow.png)
 
-Appwrite serves as the backbone, streamlining backend operations and enhancing the security of user authentication and data storage. Appwrite abstracts the complexity and repetitiveness required to build a modern backend API, allowing developers to build secure apps faster.
+## 🤝 Contributing
+
+1. Fork and create a new branch.
+2. Commit your changes.
+3. Push to your branch.
+4. Open a Pull Request.
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+Created with ❤️ by Subrat Yadav
+
+---
