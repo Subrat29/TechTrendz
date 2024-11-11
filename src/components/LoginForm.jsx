@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label
 
 function LoginForm() {
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false) // Added loading state to indicate submission status
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
@@ -16,6 +17,7 @@ function LoginForm() {
 
     const loginHandler = async (data) => {
         setError('')
+        setLoading(true) // Set loading to true when submission starts
         try {
             const session = await authservice.logIn(data)
             if (session) {
@@ -25,6 +27,8 @@ function LoginForm() {
             }
         } catch (error) {
             setError(error.message)
+        } finally {
+            setLoading(false) // Reset loading state after submission completes
         }
     }
 
@@ -49,7 +53,7 @@ function LoginForm() {
                                 {...register("email", {
                                     required: true,
                                     validate: {
-                                        matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                        matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
                                             "Email address must be a valid address",
                                     }
                                 })}
@@ -74,12 +78,10 @@ function LoginForm() {
                             type="submit"
                             className=""
                             variant=""
+                            disabled={loading} // Disable button when loading is true
                         >
-                            Sign in
+                            {loading ? "Signing in..." : "Sign in"} {/* Show loading text if loading */}
                         </Button>
-                        {/* <Button variant="" className="w-full">
-                            Login with Google
-                        </Button> */}
                     </div>
                     {error && <p className="text-red-600 mt-4 text-center">{error}</p>}
                     <div className="mt-4 text-center text-sm">

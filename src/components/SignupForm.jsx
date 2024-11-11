@@ -9,11 +9,13 @@ import { login as storeLogin } from '../feature/authSlice'
 function SignupForm() {
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false) // Added loading state to track form submission status
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleSignup = async (data) => {
         setError('')
+        setLoading(true) // Set loading to true when form submission starts
         try {
             const session = await authservice.signUp(data)
             if (session) {
@@ -23,6 +25,8 @@ function SignupForm() {
             }
         } catch (error) {
             setError(error.message)
+        } finally {
+            setLoading(false) // Set loading to false once submission is complete (success or error)
         }
     }
 
@@ -77,8 +81,9 @@ function SignupForm() {
                             type="submit"
                             className=""
                             variant=""
+                            disabled={loading} // Disable button while loading is true
                         >
-                            Sign up
+                            {loading ? "Signing up..." : "Sign up"} {/* Show spinner text if loading */}
                         </Button>
                     </div>
                     {error && <p className="text-red-600 mt-4 text-center">{error}</p>}
