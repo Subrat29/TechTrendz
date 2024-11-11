@@ -57,7 +57,7 @@ const CodeBlock = ({ language, value }) => {
                 <SyntaxHighlighter
                     language={'jsx'}
                     // language={language || 'jsx'}
-                    style={theme === 'dark' ? tomorrow : coy} // Automatically switch theme based on mode
+                    style={theme === 'light' ? coy : tomorrow} // Automatically switch theme based on mode
                     customStyle={{
                         backgroundColor: 'transparent', // Use Tailwind classes for background
                     }}

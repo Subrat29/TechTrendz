@@ -77,14 +77,16 @@
 
 1. **Home Feed**: ![Home Feed](./screenshots/home-page1.png)
 2. **Single Post**: ![Home Feed](./screenshots/post-page1.png)
-3. **Write Post**: ![Write Post](./screenshots/write-page1.png)
+3. **Single Post in Light Mode**: ![Home Feed](./screenshots/post1.png) 
+4. **Write Post**: ![Write Post](./screenshots/write-page1.png)
 
 ### Mobile View
 
 1. **Home Feed**: ![Home Feed](./screenshots/home-page2.png)
 2. **Mobile Header**: ![Home Feed](./screenshots/header.png)
-3. **Single Post**: ![Home Feed](./screenshots/post-page2.png)
-4. **Write Post**: ![Write Post](./screenshots/write-page2.png)
+3. **Single Post**: ![Home Feed](./screenshots/post-page2.png) 
+4. **Single Post in Light Mode**: ![Home Feed](./screenshots/post2.png) 
+5. **Write Post**: ![Write Post](./screenshots/write-page2.png)
 
 
 ## 📊 Architecture and Data Flow Diagram
