@@ -85,6 +85,14 @@ function App() {
     return url
   };
 
+  // Custom Loading Spinner component with darker theme
+  const LoadingSpinner = () => (
+    <div className="flex flex-col items-center justify-center gap-4">
+      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-gray-400 text-sm font-medium">Loading...</p>
+    </div>
+  )
+
   return !loading ? (
     // Wrapping the entire component tree with ThemeProvider
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -93,7 +101,9 @@ function App() {
           <Header />
           <main>
             {postsLoading ? (
-              <div className='text-5xl flex items-center justify-center w-full'>Loading posts...</div>
+              <div className="flex items-center justify-center h-full min-h-[50vh]">
+                <LoadingSpinner />
+              </div>
             ) : (
               <Outlet />
             )}
@@ -103,10 +113,8 @@ function App() {
       </div>
     </ThemeProvider>
   ) : (
-    <div className='min-h-screen flex flex-wrap content-between'>
-      <div className='w-full block'>
-        <h2 className='text-5xl flex items-center justify-center w-full'>Loading...</h2>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-950">
+      <LoadingSpinner />
     </div>
   )
 }
