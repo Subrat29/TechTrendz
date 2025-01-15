@@ -7,7 +7,6 @@ import { Provider } from 'react-redux'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import { AddPost, AllUserPosts, EditPost, Home, Login, Post, Signup } from './pages/index'
 import { AuthLayout } from './components/index'
-import Test from './pages/Test.jsx'
 import { Toaster } from "@/components/ui/toaster"
 
 const router = createBrowserRouter(
@@ -40,9 +39,6 @@ const router = createBrowserRouter(
       } />
       <Route path='/post/:slug' element={
         <Post />
-      } />
-      <Route path='/test' element={
-        <Test/>
       } />
     </Route>
   )

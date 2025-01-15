@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react'
-import { Container, PostCard2 } from '../components/index'
+import { Container, PostCard } from '../components/index'
 import { useSelector } from 'react-redux'
 
 function AllUserPosts() {
@@ -53,7 +53,7 @@ function AllUserPosts() {
             <Container>
                 <div className="grid grid-cols-1 gap-4">
                     {posts?.map((post) => (
-                        <PostCard2 key={post?.$id} post={post} />
+                        <PostCard key={post?.$id} post={post} />
                     ))}
                 </div>
             </Container>

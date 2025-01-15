@@ -1,109 +1,85 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-    Logo,
-    Button,
     ModeToggle,
     LogoutBtn,
     Sheet,
     SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
-    SheetClose, // Import SheetClose to use for automatic close behavior
+    SheetClose,
 } from "@/components/index";
 
 function Header() {
-    const authStatus = useSelector((state) => state.auth.status) || false;
-    const authUserData = useSelector((state) => state.auth.userData) || {};
-    const [user, setUser] = useState('Guest');
+    const authStatus = useSelector((state) => state.auth.status);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        setUser(authStatus && authUserData?.name ? authUserData.name : 'Guest');
-    }, [authUserData, authStatus]);
-
     const navItems = [
-        { name: 'Home', url: '/', active: true },
-        { name: 'Login', url: '/login', active: !authStatus },
-        { name: 'Signup', url: '/signup', active: !authStatus },
-        { name: 'Your Posts', url: '/alluserposts', active: authStatus },
-        { name: 'Write', url: '/addpost', active: authStatus },
+        { name: 'Home', url: '/' },
+        { name: 'Write', url: '/addpost', protected: true },
+        { name: 'Posts', url: '/alluserposts', protected: true },
+        { name: 'Login', url: '/login', guest: true },
     ];
 
-    const handleNavigation = (url) => {
-        navigate(url);
-    };
+    const filteredNavItems = navItems.filter(item => 
+        (item.protected && authStatus) || 
+        (item.guest && !authStatus) || 
+        (!item.protected && !item.guest)
+    );
 
     return (
-        <header className="py-3 bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700 transition-colors duration-300">
+        <header className="py-2 border-b border-gray-200 dark:border-gray-800">
             <div className="container mx-auto px-4">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between h-12">
                     {/* Logo */}
-                    <Link to="/">
-                        <Logo className="w-32 h-auto" />
+                    <Link to="/" className="text-lg font-semibold">
+                        TechTrendz
                     </Link>
 
-                    {/* Large Screen Navigation */}
-                    <nav className="hidden md:flex items-center space-x-6">
-                        {navItems.map((item) => item.active && (
-                            <Button
+                    {/* Desktop Navigation */}
+                    <nav className="hidden md:flex items-center space-x-4">
+                        {filteredNavItems.map(item => (
+                            <button
                                 key={item.name}
-                                onClick={() => handleNavigation(item.url)}
-                                variant="ghost"
-                                className="px-4 py-2 text-sm font-semibold rounded-md text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
+                                onClick={() => navigate(item.url)}
+                                className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                             >
                                 {item.name}
-                            </Button>
+                            </button>
                         ))}
                         {authStatus && (
-                            <LogoutBtn className="px-4 py-2 rounded-md text-sm font-semibold text-gray-900 dark:text-gray-200" />
+                            <LogoutBtn className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" />
                         )}
-                        {/* Dark/Light Mode Toggle */}
-                        <div className="ml-4">
-                            <ModeToggle />
-                        </div>
+                        <ModeToggle />
                     </nav>
 
-                    {/* Mobile View Navigation */}
-                    <div className="md:hidden">
+                    {/* Mobile Navigation */}
+                    <div className="md:hidden flex items-center space-x-2">
+                        <ModeToggle />
                         <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className="px-3 py-1 text-lg font-semibold"
-                                >
-                                    ☰
-                                </Button>
+                            <SheetTrigger className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                                </svg>
                             </SheetTrigger>
-                            <SheetContent side="right">
-                                <SheetHeader className="border-b border-gray-300 dark:border-gray-700">
-                                    <SheetTitle>TechTrendz</SheetTitle>
-                                    <SheetDescription />
-                                </SheetHeader>
-                                <div className="mt-4">
-                                    {navItems.map((item) => item.active && (
+                            <SheetContent side="right" className="w-64">
+                                <nav className="flex flex-col space-y-2 mt-6">
+                                    {filteredNavItems.map(item => (
                                         <SheetClose asChild key={item.name}>
-                                            <Button
-                                                onClick={() => handleNavigation(item.url)}
-                                                variant="ghost"
-                                                className="block w-full text-center px-4 py-2 mt-2 text-sm font-semibold text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200"
+                                            <button
+                                                onClick={() => navigate(item.url)}
+                                                className="px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                                             >
                                                 {item.name}
-                                            </Button>
+                                            </button>
                                         </SheetClose>
                                     ))}
                                     {authStatus && (
                                         <SheetClose asChild>
-                                            <LogoutBtn className="block w-full text-center px-4 py-2 mt-2 text-sm font-semibold" />
+                                            <LogoutBtn className="px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" />
                                         </SheetClose>
                                     )}
-                                    <div className="mt-3 text-center">
-                                        <ModeToggle />
-                                    </div>
-                                </div>
+                                </nav>
                             </SheetContent>
                         </Sheet>
                     </div>

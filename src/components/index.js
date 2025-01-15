@@ -9,7 +9,6 @@ import LogoutBtn from './LogoutBtn'
 import RTE from './RTE'
 import SignupForm from './SignupForm'
 import PostCard from './PostCard'
-import PostCard2 from './PostCard2'
 import LoginForm from './LoginForm'
 import AuthLayout from './AuthLayout'
 import PostForm from './post-form/PostForm'
@@ -35,7 +34,6 @@ export {
     RTE,
     SignupForm,
     PostCard,
-    PostCard2,
     LoginForm,
     AuthLayout,
     PostForm,

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Container, PostCard2 } from '../components/index'
+import { Container, PostCard } from '../components/index'
 
 function Home() {
     const allPosts = useSelector((state) => state?.posts?.posts) || null;
@@ -44,7 +44,7 @@ function Home() {
             <Container>
                 <div className="grid grid-cols-1 gap-4">
                     {posts?.map((post) => (
-                        <PostCard2 key={post?.$id} post={post} />
+                        <PostCard key={post?.$id} post={post} />
                     ))}
                 </div>
             </Container>
